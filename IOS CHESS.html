@@ -1,0 +1,1974 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Итальянская партия</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap">
+<style>
+/* Apple iOS 18 / visionOS — Dark Luxury Glassmorphism (Dark-Only + Lichess Standard Pieces) */
+:root {
+  color-scheme: dark;
+
+  --bg-base: #06080E;
+  --bg-mesh:
+    radial-gradient(at 14% 12%, rgba(56, 108, 235, 0.25) 0px, transparent 50%),
+    radial-gradient(at 86% 10%, rgba(212, 163, 89, 0.16) 0px, transparent 46%),
+    radial-gradient(at 82% 88%, rgba(108, 72, 195, 0.22) 0px, transparent 52%),
+    radial-gradient(at 15% 86%, rgba(32, 148, 132, 0.15) 0px, transparent 48%),
+    linear-gradient(160deg, #0B101B 0%, #05070B 100%);
+
+  --glass-panel: rgba(18, 24, 38, 0.62);
+  --glass-elevated: rgba(255, 255, 255, 0.065);
+  --glass-hover: rgba(255, 255, 255, 0.125);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-subtle: rgba(255, 255, 255, 0.08);
+  --glass-specular: inset 0 1px 0 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  --ink: #F5F7FA;
+  --ink-2: #B4BDD0;
+  --ink-3: #788299;
+  --line: rgba(255, 255, 255, 0.09);
+
+  --pen: #60A5FA;
+  --pen-grad: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  --pen-soft: rgba(59, 130, 246, 0.20);
+  --on-pen: #FFFFFF;
+  --gold-soft: rgba(234, 179, 8, 0.15);
+  --gold-border: rgba(234, 179, 8, 0.32);
+  --gold-ink: #FDE68A;
+
+  --red: #FCA5A5;
+  --red-soft: rgba(239, 68, 68, 0.18);
+  --ok: #6EE7B7;
+  --ok-soft: rgba(16, 185, 129, 0.18);
+  --warn: #FCD34D;
+  --warn-soft: rgba(245, 158, 11, 0.18);
+
+  --sq-light: linear-gradient(135deg, #DDE3EE 0%, #C5D0E2 100%);
+  --sq-dark: linear-gradient(135deg, #425575 0%, #2B3954 100%);
+  --coord-on-light: #18263C;
+  --coord-on-dark: #F8FAFC;
+  --hl-last: rgba(250, 204, 21, 0.42);
+  --hl-sel: rgba(96, 165, 250, 0.45);
+  --hl-hint: #60A5FA;
+  --dot: rgba(12, 18, 30, 0.48);
+
+  --shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.60), 0 4px 16px rgba(0, 0, 0, 0.30);
+  --board-shadow: 0 34px 70px -12px rgba(0, 0, 0, 0.82), 0 0 40px -10px rgba(59, 130, 246, 0.16);
+  --blur: blur(32px) saturate(190%);
+
+  --display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Manrope", sans-serif;
+  --body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes iosSlideUp {
+  0% { opacity: 0; transform: translateY(18px) scale(0.985); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes iosPop {
+  0% { transform: scale(0.96); }
+  50% { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+@keyframes iosShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+@keyframes targetPulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+@keyframes hintPulse {
+  0%, 100% { box-shadow: inset 0 0 0 3px var(--hl-hint), inset 0 0 14px rgba(96, 165, 250, 0.55); }
+  50% { box-shadow: inset 0 0 0 5px #93C5FD, inset 0 0 24px rgba(96, 165, 250, 0.85); }
+}
+@keyframes checkPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+  background-image: var(--bg-mesh);
+  background-attachment: fixed;
+  color: var(--ink);
+  font: 400 16px/1.55 var(--body);
+  padding-inline: 18px;
+  padding-block: 0 56px;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 1200px; margin: 0 auto; position: relative; }
+button, input, textarea { font: inherit; color: inherit; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.03em; }
+:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+/* ---------- Header ---------- */
+.top {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+  gap: 14px 24px; padding-block: 32px 22px;
+  animation: iosSlideUp 0.5s var(--ease-spring) both;
+}
+.eyebrow {
+  display: inline-flex; align-items: center;
+  font: 700 11px/1.2 var(--body); letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold-ink); background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  padding: 6px 14px; border-radius: 999px;
+  box-shadow: 0 4px 16px -4px rgba(234, 179, 8, 0.25);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.top h1 {
+  font-size: clamp(30px, 4.6vw, 44px); font-weight: 800; line-height: 1.08; margin-top: 10px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.top .sub { color: var(--ink-2); margin: 8px 0 0; max-width: 62ch; font-size: 16px; }
+.who {
+  font: 600 15px/1 var(--body); color: var(--ink);
+  background: var(--glass-elevated);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular), var(--shadow);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  padding: 11px 20px; border-radius: 999px; white-space: nowrap;
+}
+.who:empty { display: none; }
+
+/* ---------- Scoresheet Strip ---------- */
+.sheet {
+  display: flex; flex-wrap: wrap; gap: 14px 22px; padding: 16px 22px;
+  background: var(--glass-panel);
+  border: 1px solid var(--glass-border);
+  border-radius: 26px;
+  box-shadow: var(--glass-specular), var(--shadow);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  animation: iosSlideUp 0.55s var(--ease-spring) both;
+}
+.part-group { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.part-group .lbl {
+  font: 700 11px/1.2 var(--body); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3); white-space: nowrap;
+}
+.cells { display: flex; flex-wrap: wrap; gap: 6px; }
+.cell {
+  width: 36px; height: 36px;
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: 12px;
+  background: var(--glass-elevated);
+  cursor: pointer; position: relative;
+  font: 700 13px/1 var(--body); color: var(--ink-2);
+  display: grid; place-items: center; font-variant-numeric: tabular-nums;
+  transition: all 0.25s var(--ease-ios);
+}
+.cell:hover:not(:disabled) { background: var(--glass-hover); color: var(--ink); transform: translateY(-2px); }
+.cell:active:not(:disabled) { transform: scale(0.92); }
+.cell.cur {
+  background: var(--pen-grad); color: var(--on-pen); border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 18px -2px rgba(59, 130, 246, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+.cell:disabled { opacity: 0.35; cursor: not-allowed; }
+.cell .mk {
+  position: absolute; right: -4px; top: -5px;
+  font: 700 10px/1 var(--body); width: 16px; height: 16px;
+  border-radius: 50%; display: grid; place-items: center;
+  background: var(--glass-hover); box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+}
+.cell.s-full { background: var(--ok-soft); color: var(--ok); border-color: rgba(16, 185, 129, 0.30); }
+.cell.s-full .mk { background: #10B981; color: #fff; }
+.cell.s-part { background: var(--warn-soft); color: var(--warn); border-color: rgba(245, 158, 11, 0.30); }
+.cell.s-part .mk { background: #F59E0B; color: #fff; }
+.cell.s-zero { background: var(--red-soft); color: var(--red); border-color: rgba(239, 68, 68, 0.30); }
+.cell.s-zero .mk { background: #EF4444; color: #fff; }
+.cell.cur.s-full, .cell.cur.s-part, .cell.cur.s-zero { outline: 2px solid var(--pen); outline-offset: 2px; }
+
+.sheet-total {
+  margin-left: auto; align-self: center; text-align: right;
+  font-size: 12px; font-weight: 500; color: var(--ink-2);
+  background: var(--glass-elevated);
+  border: 1px solid var(--glass-border-subtle);
+  padding: 8px 16px; border-radius: 16px;
+}
+.sheet-total b { font: 800 18px/1.15 var(--display); color: var(--gold-ink); display: block; font-variant-numeric: tabular-nums; }
+
+/* ---------- Cards & Buttons ---------- */
+.card {
+  background: var(--glass-panel);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: var(--glass-specular), var(--shadow);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 22px; border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-elevated);
+  box-shadow: var(--glass-specular), 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  cursor: pointer; font-weight: 600; font-size: 15px; text-decoration: none; color: var(--ink);
+  transition: all 0.25s var(--ease-ios);
+  position: relative; overflow: hidden;
+}
+.btn:hover:not([disabled]) { background: var(--glass-hover); transform: translateY(-1.5px); border-color: rgba(255, 255, 255, 0.28); }
+.btn:active:not([disabled]) { transform: scale(0.96); }
+.btn.primary {
+  background: var(--pen-grad); border-color: rgba(255, 255, 255, 0.28); color: var(--on-pen);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 24px -4px rgba(37, 99, 235, 0.55);
+}
+.btn.primary:hover:not([disabled]) { filter: brightness(1.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 12px 28px -4px rgba(59, 130, 246, 0.7); }
+.btn.ghost {
+  background: transparent; border-color: transparent; box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  color: var(--ink-2); font-weight: 500;
+}
+.btn.ghost:hover:not([disabled]) { background: var(--glass-elevated); border-color: var(--glass-border-subtle); color: var(--ink); }
+.btn[disabled] { opacity: 0.4; cursor: default; transform: none; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.muted { color: var(--ink-2); }
+.small { font-size: 14px; }
+.lead { font-size: 17px; }
+
+/* ---------- Intro / Theory ---------- */
+.theory {
+  margin-top: 14px; padding: 28px;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 28px; align-items: start;
+  animation: iosSlideUp 0.55s var(--ease-spring) both;
+}
+.theory h2 { font-size: 24px; font-weight: 700; }
+.theory .txt { display: grid; gap: 12px; min-width: 0; }
+.theory .txt p { margin: 0; max-width: 62ch; }
+.theory h3 { font-size: 16px; font-weight: 700; margin-top: 8px; }
+.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: q; }
+.rules li { counter-increment: q; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.rules li::before {
+  content: counter(q); font: 700 14px/30px var(--body);
+  width: 30px; height: 30px; border-radius: 50%; text-align: center;
+  background: var(--pen-soft); color: var(--pen);
+}
+.demo { display: grid; gap: 12px; min-width: 0; }
+.demo .cap {
+  min-height: 76px; padding: 14px 18px; border-radius: 18px;
+  background: var(--glass-elevated); border: 1px solid var(--glass-border-subtle); font-size: 15px;
+}
+.demo .cap b { color: var(--pen); }
+.demo .cap.good { background: var(--ok-soft); border-color: rgba(16, 185, 129, 0.30); }
+.demo .cap.good b { color: var(--ok); }
+.demo .cap.bad { background: var(--red-soft); border-color: rgba(239, 68, 68, 0.30); }
+.demo .cap.bad b { color: var(--red); }
+
+.intro {
+  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 22px; margin-top: 18px;
+  animation: iosSlideUp 0.6s var(--ease-spring) both;
+}
+.intro .card { padding: 28px; }
+.intro h2 { font-size: 23px; font-weight: 700; }
+.intro p { margin: 10px 0 0; max-width: 62ch; }
+.plan { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 10px; }
+.plan li {
+  display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  padding: 14px 16px; border-radius: 20px;
+  background: var(--glass-elevated); border: 1px solid var(--glass-border-subtle);
+  transition: transform 0.25s var(--ease-ios), background-color 0.25s ease;
+}
+.plan li:hover { background: var(--glass-hover); transform: translateX(4px); }
+.plan .n {
+  font: 800 15px/38px var(--display); color: var(--gold-ink);
+  background: var(--gold-soft); border: 1px solid var(--gold-border);
+  width: 38px; height: 38px; border-radius: 12px; text-align: center;
+}
+.plan .t { font-weight: 700; }
+.plan .d { display: block; color: var(--ink-2); font-size: 14px; font-weight: 400; margin-top: 2px; }
+.plan .c {
+  font-size: 12px; font-weight: 600; color: var(--ink-2);
+  background: var(--glass-panel); border: 1px solid var(--glass-border-subtle);
+  padding: 4px 11px; border-radius: 999px; white-space: nowrap;
+}
+.how { display: grid; gap: 12px; margin-top: 18px; font-size: 15px; }
+.how div {
+  display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; align-items: center;
+  background: var(--glass-elevated); border: 1px solid var(--glass-border-subtle);
+  padding: 12px 16px; border-radius: 18px;
+}
+.how svg { width: 22px; height: 22px; color: var(--pen); justify-self: center; }
+
+.field { display: grid; gap: 8px; margin-top: 22px; }
+.field label { font-weight: 600; font-size: 14px; color: var(--ink-2); padding-left: 4px; }
+.field input {
+  font-size: 16px; line-height: 1.4; color: var(--ink);
+  background: rgba(10, 14, 24, 0.55); border: 1px solid var(--glass-border);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+  border-radius: 16px; padding: 13px 16px; width: 100%; transition: all 0.25s ease;
+}
+.field input:focus { border-color: var(--pen); outline: none; box-shadow: 0 0 0 4px var(--pen-soft), inset 0 2px 6px rgba(0, 0, 0, 0.35); }
+.intro .row { margin-top: 18px; }
+
+/* ---------- Task Screen ---------- */
+.task {
+  display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
+  grid-template-areas: "board head" "board side"; grid-template-rows: auto 1fr;
+  gap: 18px 32px; margin-top: 22px; align-items: start;
+}
+.board-col { grid-area: board; min-width: 0; animation: iosSlideUp 0.5s var(--ease-spring) both; }
+.task-head { grid-area: head; display: flex; flex-direction: column; gap: 10px; min-width: 0; padding-top: 4px; animation: iosSlideUp 0.55s var(--ease-spring) 0.04s both; }
+.side { grid-area: side; padding: 26px; display: flex; flex-direction: column; gap: 16px; min-width: 0; animation: iosSlideUp 0.6s var(--ease-spring) 0.08s both; }
+.kicker {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  gap: 6px 12px; font: 700 11px/1.3 var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3);
+}
+.kicker .part {
+  color: var(--gold-ink); background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  padding: 4px 12px; border-radius: 999px;
+}
+.task-head h2 { font-size: clamp(22px, 2.8vw, 28px); font-weight: 800; line-height: 1.18; }
+.task-head .prompt { margin: 0; max-width: 60ch; font-size: 16px; color: var(--ink-2); }
+.steps { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px;
+  border-radius: 999px; font-size: 13px; font-weight: 600;
+  background: var(--glass-elevated); border: 1px solid var(--glass-border-subtle); color: var(--ink-2);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  transition: all 0.25s ease;
+}
+.chip.on { border-color: rgba(96, 165, 250, 0.45); color: var(--pen); background: var(--pen-soft); box-shadow: 0 0 14px rgba(59, 130, 246, 0.2); }
+.chip.done { border-color: rgba(16, 185, 129, 0.35); color: var(--ok); background: var(--ok-soft); }
+.chip i { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--ink-3); background: #F3EFE6; display: inline-block; }
+.chip i.b { background: #1E273B; border-color: #64748B; }
+
+.fb {
+  border-radius: 20px; padding: 16px 18px; font-size: 16px;
+  border: 1px solid var(--glass-border-subtle);
+  background: var(--glass-elevated);
+  min-height: 54px; line-height: 1.5;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+.fb strong { font-weight: 700; }
+.fb.ok { border-color: rgba(16, 185, 129, 0.35); background: var(--ok-soft); animation: iosPop 0.32s var(--ease-spring); }
+.fb.ok strong { color: var(--ok); }
+.fb.bad { border-color: rgba(239, 68, 68, 0.40); background: var(--red-soft); animation: iosShake 0.4s ease; }
+.fb.bad strong { color: var(--red); }
+.fb.info { border-color: rgba(96, 165, 250, 0.32); background: var(--pen-soft); }
+.fb.info strong { color: var(--pen); }
+.fb.done {
+  border-color: rgba(16, 185, 129, 0.50);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(16, 185, 129, 0.08) 100%);
+  box-shadow: 0 8px 24px -6px rgba(16, 185, 129, 0.25);
+  animation: iosPop 0.38s var(--ease-spring);
+}
+.fb.done strong { color: var(--ok); }
+.fb .big { font: 800 20px/1.2 var(--display); color: var(--ok); display: block; margin-bottom: 6px; }
+.fb .big.red { color: var(--red); }
+.fb .line { display: block; margin-top: 10px; font-size: 14px; color: var(--ink-2); }
+.fb .line b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.fb .act { margin-top: 12px; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; }
+#body:empty, .tools:empty, .steps:empty { display: none; }
+.nav {
+  display: flex; justify-content: space-between; gap: 10px;
+  border-top: 1px solid var(--line); padding-top: 16px; margin-top: auto;
+}
+.stat-line { font-size: 13px; color: var(--ink-3); }
+
+/* ---------- Quiz Options ---------- */
+.opts { display: grid; gap: 10px; }
+.opt {
+  text-align: left; padding: 14px 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  background: var(--glass-elevated);
+  box-shadow: var(--glass-specular);
+  cursor: pointer;
+  display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start;
+  line-height: 1.45; font-size: 16px; font-family: var(--body);
+  transition: all 0.25s var(--ease-ios);
+}
+.opt:hover:not([disabled]) { background: var(--glass-hover); border-color: var(--pen); transform: translateY(-2px); }
+.opt:active:not([disabled]) { transform: scale(0.98); }
+.opt .l {
+  font: 700 13px/26px var(--body); color: var(--pen);
+  background: var(--pen-soft); width: 26px; height: 26px; border-radius: 50%; text-align: center;
+}
+.opt .why { grid-column: 2; font-size: 14px; margin-top: 6px; color: var(--ink-2); animation: iosSlideUp 0.25s ease both; }
+.opt.bad { border-color: rgba(239, 68, 68, 0.50); background: var(--red-soft); cursor: default; animation: iosShake 0.4s ease; }
+.opt.bad .l { background: #EF4444; color: #fff; }
+.opt.bad .why { color: var(--red); }
+.opt.good { border-color: rgba(16, 185, 129, 0.60); background: var(--ok-soft); animation: iosPop 0.35s var(--ease-spring); }
+.opt.good .l { background: #10B981; color: #fff; }
+.opt[disabled] { cursor: default; }
+
+/* ---------- Chessboard ---------- */
+.board-shell {
+  position: relative; width: 100%; max-width: 620px;
+  padding: 10px;
+  background: linear-gradient(145deg, rgba(32, 42, 64, 0.72) 0%, rgba(14, 18, 28, 0.82) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 28px;
+  box-shadow: var(--glass-specular), var(--board-shadow);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.board {
+  position: relative; width: 100%; aspect-ratio: 1 / 1; max-width: 100%;
+  border-radius: 18px; overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 20px rgba(0, 0, 0, 0.5);
+  touch-action: none; user-select: none; -webkit-user-select: none;
+}
+.squares { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); }
+.sq { position: relative; transition: background-color 0.2s ease; }
+.sq.l { background: var(--sq-light); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+.sq.d { background: var(--sq-dark); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+.sq.last::after, .sq.sel::after, .sq.flash-ok::after, .sq.flash-bad::after, .sq.check::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.sq.last::after {
+  background: radial-gradient(circle, rgba(250, 204, 21, 0.35) 0%, rgba(234, 179, 8, 0.48) 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(250, 204, 21, 0.65);
+}
+.sq.sel::after {
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.35) 0%, rgba(37, 99, 235, 0.55) 100%);
+  box-shadow: inset 0 0 0 2px rgba(147, 197, 253, 0.85);
+}
+.sq.check::after {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.9) 0%, rgba(220, 38, 38, 0.55) 45%, transparent 74%);
+  animation: checkPulse 1.2s infinite ease-in-out;
+}
+.sq.flash-ok::after { background: rgba(16, 185, 129, 0.6); }
+.sq.flash-bad::after { background: rgba(239, 68, 68, 0.6); }
+.sq.hint { animation: hintPulse 1.4s infinite ease-in-out; z-index: 2; }
+.sq.pick { cursor: pointer; }
+
+.sq .tgt { position: absolute; inset: 0; display: grid; place-items: center; z-index: 3; pointer-events: none; }
+.sq .tgt::before {
+  content: ""; width: 28%; height: 28%; border-radius: 50%;
+  background: radial-gradient(circle, rgba(15, 23, 42, 0.65) 0%, rgba(15, 23, 42, 0.35) 100%);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.4);
+  animation: targetPulse 1.8s infinite ease-in-out;
+}
+.sq .tgt.cap::before {
+  width: 86%; height: 86%; border-radius: 50%;
+  background: transparent;
+  border: 3.5px solid rgba(250, 204, 21, 0.85);
+  box-shadow: 0 0 12px rgba(250, 204, 21, 0.45), inset 0 0 8px rgba(250, 204, 21, 0.25);
+  animation: targetPulse 1.4s infinite ease-in-out;
+}
+
+.co {
+  position: absolute; font: 800 13.5px/1 var(--display); letter-spacing: 0.02em; pointer-events: none; z-index: 1;
+}
+.co.f { right: 5px; bottom: 4px; }
+.co.r { left: 5px; top: 5px; }
+.sq.l .co { color: var(--coord-on-light); }
+.sq.d .co { color: var(--coord-on-dark); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45); }
+
+.pieces { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.pc {
+  position: absolute; width: 12.5%; height: 12.5%;
+  transition: left 0.26s var(--ease-spring), top 0.26s var(--ease-spring), transform 0.2s var(--ease-ios), filter 0.2s ease;
+  will-change: left, top, transform;
+  filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.42));
+}
+.pc img { width: 100%; height: 100%; display: block; pointer-events: none; -webkit-user-drag: none; }
+.pc.drag {
+  transition: none; z-index: 6;
+  transform: scale(1.18) translateY(-5px);
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.65));
+}
+
+.arrows { position: absolute; inset: 0; pointer-events: none; z-index: 4; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45)); }
+.board.idle .sq { cursor: default; }
+
+.under {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  gap: 8px 14px; margin-top: 12px; padding: 11px 18px;
+  background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 18px;
+  box-shadow: var(--glass-specular); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.turn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.turn i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--ink-3); background: #fff; display: inline-block; }
+.turn i.b { background: #1b1b1b; }
+.moves { font: 400 15px/1.6 var(--body); color: var(--ink); min-height: 1.6em; font-variant-numeric: tabular-nums; }
+.moves .num { color: var(--ink-3); margin-right: 3px; }
+.moves .mv { margin-right: 8px; }
+.moves .mv.last { color: var(--pen); font-weight: 700; }
+.moves .mv.bad { color: var(--red); font-weight: 700; }
+
+/* ---------- Results & Coach ---------- */
+.res {
+  display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 22px; margin-top: 20px; align-items: start;
+  animation: iosSlideUp 0.6s var(--ease-spring) both;
+}
+.res .card { padding: 28px; }
+.grade { display: grid; justify-items: center; text-align: center; gap: 8px; }
+.grade .mark {
+  font: 800 68px/1 var(--display); color: var(--gold-ink);
+  background: var(--gold-soft); border: 1px solid var(--gold-border);
+  box-shadow: var(--glass-specular), 0 14px 34px -8px rgba(234, 179, 8, 0.30);
+  width: 136px; height: 136px; border-radius: 36px;
+  display: grid; place-items: center; margin-top: 12px;
+  animation: iosPop 0.5s var(--ease-spring) 0.15s both;
+}
+.grade .word { font: 800 22px/1.2 var(--display); color: var(--ink); margin-top: 10px; }
+.kv {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px;
+  margin: 20px 0 0; padding: 16px;
+  background: var(--glass-elevated); border: 1px solid var(--glass-border-subtle);
+  border-radius: 20px; width: 100%; text-align: left; font-size: 14px;
+}
+.kv dt { color: var(--ink-2); }
+.kv dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.sent {
+  display: flex; gap: 12px; align-items: center; padding: 14px 18px;
+  border-radius: 18px; font-size: 15px; margin-top: 6px;
+  border: 1px solid var(--glass-border-subtle);
+}
+.sent.ok { background: var(--ok-soft); color: var(--ok); }
+.sent.wait { background: var(--pen-soft); color: var(--pen); }
+.sent.err { background: var(--warn-soft); color: var(--warn); }
+.sent svg { width: 22px; height: 22px; flex: none; }
+.tbl-wrap {
+  overflow-x: auto; margin-top: 14px;
+  background: var(--glass-elevated); border: 1px solid var(--glass-border-subtle);
+  border-radius: 20px; padding: 8px 16px 16px;
+}
+table.rep { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+.rep th { text-align: left; font: 700 11px/1.2 var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); padding: 12px 8px; border-bottom: 1px solid var(--line); }
+.rep td { padding: 12px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.rep tr:last-child td { border-bottom: 0; }
+.rep td.n { color: var(--ink-3); width: 36px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.rep td.pts { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+.rep tr.part-row td { border-bottom: 0; padding-top: 18px; font: 700 11px var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-ink); }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.badge.full { background: var(--ok-soft); color: var(--ok); }
+.badge.part { background: var(--warn-soft); color: var(--warn); }
+.badge.zero { background: var(--red-soft); color: var(--red); }
+.badge.none { background: var(--glass-panel); color: var(--ink-3); }
+.wrong { color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+.wrong b { color: var(--red); }
+
+.coach { margin-top: 18px; display: grid; gap: 16px; max-width: 760px; animation: iosSlideUp 0.55s var(--ease-spring) both; }
+.coach .card { padding: 26px; }
+.coach h2 { font-size: 22px; font-weight: 700; }
+.coach ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 8px; }
+.coach .stepbox { display: grid; gap: 12px; }
+.coach .num {
+  display: inline-block; width: fit-content;
+  font: 700 11px var(--body); color: var(--gold-ink); background: var(--gold-soft);
+  border: 1px solid var(--gold-border);
+  padding: 4px 12px; border-radius: 999px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.coach code { font-family: Consolas, monospace; font-size: 14px; background: var(--glass-elevated); border: 1px solid var(--glass-border-subtle); border-radius: 8px; padding: 2px 8px; word-break: break-all; }
+.coach .msg { font-size: 15px; min-height: 1.4em; }
+.coach .msg.ok { color: var(--ok); }
+.coach .msg.err { color: var(--red); }
+.coach a { color: var(--pen); }
+
+footer { margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-3); }
+footer .btn { min-height: 36px; font-size: 13px; }
+
+@media (max-width: 920px) {
+  .task, .intro, .res, .theory { grid-template-columns: minmax(0, 1fr); }
+  .task { grid-template-areas: "head" "board" "side"; grid-template-rows: auto; }
+  .board-shell { margin: 0 auto; max-width: 580px; }
+  .side, .theory, .intro .card, .res .card { padding: 22px; border-radius: 24px; }
+  .demo .board-shell { max-width: 480px; }
+}
+@media (max-width: 520px) {
+  .cell { width: 34px; height: 34px; font-size: 12px; border-radius: 10px; }
+  .sheet { padding: 14px; gap: 10px 12px; border-radius: 22px; }
+  .sheet-total { margin-left: 0; text-align: left; }
+  .board-shell { padding: 6px; border-radius: 22px; }
+  .board { border-radius: 15px; }
+  .co { font-size: 11px; }
+  .co.f { right: 3px; bottom: 2px; }
+  .co.r { left: 3px; top: 3px; }
+  .grade .mark { font-size: 56px; width: 116px; height: 116px; border-radius: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+<script>
+/* Звуковой движок Web Audio API (без внешних аудиофайлов) */
+const SFX = {
+  ctx: null,
+  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+  play(type) {
+    try {
+      this.init();
+      if (!this.ctx) return;
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain); gain.connect(this.ctx.destination);
+
+      if (type === 'move') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(440, now); osc.frequency.exponentialRampToValueAtTime(220, now + 0.08);
+        gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc.start(now); osc.stop(now + 0.08);
+      } else if (type === 'ok') {
+        osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, now); osc.frequency.setValueAtTime(659.25, now + 0.08); osc.frequency.setValueAtTime(783.99, now + 0.16);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now); osc.stop(now + 0.35);
+      } else if (type === 'bad') {
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(120, now + 0.15);
+        gain.gain.setValueAtTime(0.18, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        osc.start(now); osc.stop(now + 0.15);
+      }
+    } catch(e) {}
+  }
+};
+</script>
+</head>
+<body>
+<script id="tg-config" type="application/json">{"token":"8782998527:AAFkIrKuo-qU4W8_t8NbxRLwF0GvDxXsvBY","chat":"530797813"}</script>
+<div class="page">
+  <header class="top">
+    <div>
+      <div class="eyebrow" id="eyebrow"></div>
+      <h1 id="hw-title"></h1>
+      <p class="sub" id="hw-sub"></p>
+    </div>
+    <div class="who" id="who"></div>
+  </header>
+
+  <nav class="sheet" id="sheet" hidden="" aria-label="Задания"></nav>
+
+  <main id="view"></main>
+
+  <footer>
+    <span>Фигуры: Colin M. L. Burnett (BSD). Все позиции проверены шахматным движком.</span>
+    <button class="btn ghost" id="coach-link" type="button" hidden="">Настройка для тренера</button>
+  </footer>
+</div>
+
+<script>
+const PIECE_IMG = {"bb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05IDM2YzMuMzktLjk3IDEwLjExLjQzIDEzLjUtMiAzLjM5IDIuNDMgMTAuMTEgMS4wMyAxMy41IDIgMCAwIDEuNjUuNTQgMyAyLS42OC45Ny0xLjY1Ljk5LTMgLjUtMy4zOS0uOTctMTAuMTEuNDYtMTMuNS0xLTMuMzkgMS40Ni0xMC4xMS4wMy0xMy41IDEtMS4zNTQuNDktMi4zMjMuNDctMy0uNSAxLjM1NC0xLjk0IDMtMiAzLTJ6bTYtNGMyLjUgMi41IDEyLjUgMi41IDE1IDAgLjUtMS41IDAtMiAwLTIgMC0yLjUtMi41LTQtMi41LTQgNS41LTEuNSA2LTExLjUtNS0xNS41LTExIDQtMTAuNSAxNC01IDE1LjUgMCAwLTIuNSAxLjUtMi41IDQgMCAwLS41LjUgMCAyek0yNSA4YTIuNSAyLjUgMCAxIDEtNSAwIDIuNSAyLjUgMCAxIDEgNSAweiIgZmlsbD0iIzAwMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMTcuNSAyNmgxME0xNSAzMGgxNW0tNy41LTE0LjV2NU0yMCAxOGg1IiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48L2c+PC9zdmc+", "bk": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41IDExLjYzVjYiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMjIuNSAyNXM0LjUtNy41IDMtMTAuNWMwIDAtMS0yLjUtMy0yLjVzLTMgMi41LTMgMi41Yy0xLjUgMyAzIDEwLjUgMyAxMC41IiBmaWxsPSIjMDAwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0xMS41IDM3YzUuNSAzLjUgMTUuNSAzLjUgMjEgMHYtN3M5LTQuNSA2LTEwLjVjLTQtNi41LTEzLjUtMy41LTE2IDRWMjd2LTMuNWMtMy41LTcuNS0xMy0xMC41LTE2LTQtMyA2IDUgMTAgNSAxMFYzN3oiIGZpbGw9IiMwMDAiLz48cGF0aCBkPSJNMjAgOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTMyIDI5LjVzOC41LTQgNi4wMy05LjY1QzM0LjE1IDE0IDI1IDE4IDIyLjUgMjQuNWwuMDEgMi4xLS4wMS0yLjFDMjAgMTggOS45MDYgMTQgNi45OTcgMTkuODVjLTIuNDk3IDUuNjUgNC44NTMgOSA0Ljg1MyA5TTExLjUgMzBjNS41LTMgMTUuNS0zIDIxIDBtLTIxIDMuNWM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwIiBzdHJva2U9IiNmZmYiLz48L2c+PC9zdmc+", "bn": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0gMjIsMTAgQyAzMi41LDExIDM4LjUsMTggMzgsMzkgTCAxNSwzOSBDIDE1LDMwIDI1LDMyLjUgMjMsMTgiIHN0eWxlPSJmaWxsOiMwMDAwMDA7IHN0cm9rZTojMDAwMDAwOyIvPjxwYXRoIGQ9Ik0gMjQsMTggQyAyNC4zOCwyMC45MSAxOC40NSwyNS4zNyAxNiwyNyBDIDEzLDI5IDEzLjE4LDMxLjM0IDExLDMxIEMgOS45NTgsMzAuMDYgMTIuNDEsMjcuOTYgMTEsMjggQyAxMCwyOCAxMS4xOSwyOS4yMyAxMCwzMCBDIDksMzAgNS45OTcsMzEgNiwyNiBDIDYsMjQgMTIsMTQgMTIsMTQgQyAxMiwxNCAxMy44OSwxMi4xIDE0LDEwLjUgQyAxMy4yNyw5LjUwNiAxMy41LDguNSAxMy41LDcuNSBDIDE0LjUsNi41IDE2LjUsMTAgMTYuNSwxMCBMIDE4LjUsMTAgQyAxOC41LDEwIDE5LjI4LDguMDA4IDIxLDcgQyAyMiw3IDIyLDEwIDIyLDEwIiBzdHlsZT0iZmlsbDojMDAwMDAwOyBzdHJva2U6IzAwMDAwMDsiLz48cGF0aCBkPSJNIDkuNSAyNS41IEEgMC41IDAuNSAwIDEgMSA4LjUsMjUuNSBBIDAuNSAwLjUgMCAxIDEgOS41IDI1LjUgeiIgc3R5bGU9ImZpbGw6I2VjZWNlYzsgc3Ryb2tlOiNlY2VjZWM7Ii8+PHBhdGggZD0iTSAxNSAxNS41IEEgMC41IDEuNSAwIDEgMSAxNCwxNS41IEEgMC41IDEuNSAwIDEgMSAxNSAxNS41IHoiIHRyYW5zZm9ybT0ibWF0cml4KDAuODY2LDAuNSwtMC41LDAuODY2LDkuNjkzLC01LjE3MykiIHN0eWxlPSJmaWxsOiNlY2VjZWM7IHN0cm9rZTojZWNlY2VjOyIvPjxwYXRoIGQ9Ik0gMjQuNTUsMTAuNCBMIDI0LjEsMTEuODUgTCAyNC42LDEyIEMgMjcuNzUsMTMgMzAuMjUsMTQuNDkgMzIuNSwxOC43NSBDIDM0Ljc1LDIzLjAxIDM1Ljc1LDI5LjA2IDM1LjI1LDM5IEwgMzUuMiwzOS41IEwgMzcuNDUsMzkuNSBMIDM3LjUsMzkgQyAzOCwyOC45NCAzNi42MiwyMi4xNSAzNC4yNSwxNy42NiBDIDMxLjg4LDEzLjE3IDI4LjQ2LDExLjAyIDI1LjA2LDEwLjUgTCAyNC41NSwxMC40IHogIiBzdHlsZT0iZmlsbDojZWNlY2VjOyBzdHJva2U6bm9uZTsiLz48L2c+PC9zdmc+", "bp": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGc+PHBhdGggZD0iTTIyLjUgOWMtMi4yMSAwLTQgMS43OS00IDQgMCAuODkuMjkgMS43MS43OCAyLjM4QzE3LjMzIDE2LjUgMTYgMTguNTkgMTYgMjFjMCAyLjAzLjk0IDMuODQgMi40MSA1LjAzLTMgMS4wNi03LjQxIDUuNTUtNy40MSAxMy40N2gyM2MwLTcuOTItNC40MS0xMi40MS03LjQxLTEzLjQ3IDEuNDctMS4xOSAyLjQxLTMgMi40MS01LjAzIDAtMi40MS0xLjMzLTQuNS0zLjI4LTUuNjIuNDktLjY3Ljc4LTEuNDkuNzgtMi4zOCAwLTIuMjEtMS43OS00LTQtNHoiIGZpbGw9IiMwMDAiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L3N2Zz4=", "bq": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0iIzAwMCIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIGZpbGw9IiMwMDAiIHN0cm9rZT0ibm9uZSI+PGNpcmNsZSBjeD0iNiIgY3k9IjEyIiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMTQiIGN5PSI5IiByPSIyLjc1Ii8+PGNpcmNsZSBjeD0iMjIuNSIgY3k9IjgiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjkiIHI9IjIuNzUiLz48Y2lyY2xlIGN4PSIzOSIgY3k9IjEyIiByPSIyLjc1Ii8+PC9nPjxwYXRoIGQ9Ik05IDI2YzguNS0xLjUgMjEtMS41IDI3IDBsMi41LTEyLjVMMzEgMjVsLS4zLTE0LjEtNS4yIDEzLjYtMy0xNC41LTMgMTQuNS01LjItMTMuNkwxNCAyNSA2LjUgMTMuNSA5IDI2ek05IDI2YzAgMiAxLjUgMiAyLjUgNCAxIDEuNSAxIDEgLjUgMy41LTEuNSAxLTEuNSAyLjUtMS41IDIuNS0xLjUgMS41LjUgMi41LjUgMi41IDYuNSAxIDE2LjUgMSAyMyAwIDAgMCAxLjUtMSAwLTIuNSAwIDAgLjUtMS41LTEtMi41LS41LTIuNS0uNS0yIC41LTMuNSAxLTIgMi41LTIgMi41LTQtOC41LTEuNS0xOC41LTEuNS0yNyAweiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMTEgMzguNWEzNSAzNSAxIDAgMCAyMyAwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0xMSAyOWEzNSAzNSAxIDAgMSAyMyAwTTEyLjUgMzEuNWgyME0xMS41IDM0LjVhMzUgMzUgMSAwIDAgMjIgME0xMC41IDM3LjVhMzUgMzUgMSAwIDAgMjQgMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIi8+PC9nPjwvc3ZnPg==", "br": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0iIzAwMCIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05IDM5aDI3di0zSDl2M3pNMTIuNSAzMmwxLjUtMi41aDE3bDEuNSAyLjVoLTIwek0xMiAzNnYtNGgyMXY0SDEyeiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMTQgMjkuNXYtMTNoMTd2MTNIMTR6IiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0xNCAxNi41TDExIDE0aDIzbC0zIDIuNUgxNHpNMTEgMTRWOWg0djJoNVY5aDV2Mmg1VjloNHY1SDExeiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz48cGF0aCBkPSJNMTIgMzUuNWgyMU0xMyAzMS41aDE5TTE0IDI5LjVoMTdNMTQgMTYuNWgxN00xMSAxNGgyMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48L2c+PC9zdmc+", "wb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxnIGZpbGw9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJidXR0Ij48cGF0aCBkPSJNOSAzNmMzLjM5LS45NyAxMC4xMS40MyAxMy41LTIgMy4zOSAyLjQzIDEwLjExIDEuMDMgMTMuNSAyIDAgMCAxLjY1LjU0IDMgMi0uNjguOTctMS42NS45OS0zIC41LTMuMzktLjk3LTEwLjExLjQ2LTEzLjUtMS0zLjM5IDEuNDYtMTAuMTEuMDMtMTMuNSAxLTEuMzU0LjQ5LTIuMzIzLjQ3LTMtLjUgMS4zNTQtMS45NCAzLTIgMy0yek0xNSAzMmMyLjUgMi41IDEyLjUgMi41IDE1IDAgLjUtMS41IDAtMiAwLTIgMC0yLjUtMi41LTQtMi41LTQgNS41LTEuNSA2LTExLjUtNS0xNS41LTExIDQtMTAuNSAxNC01IDE1LjUgMCAwLTIuNSAxLjUtMi41IDQgMCAwLS41LjUgMCAyek0yNSA4YTIuNSAyLjUgMCAxIDEtNSAwIDIuNSAyLjUgMCAxIDEgNSAweiIvPjwvZz48cGF0aCBkPSJNMTcuNSAyNmgxME0xNSAzMGgxNW0tNy41LTE0LjV2NU0yMCAxOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PC9nPjwvc3ZnPg==", "wk": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41IDExLjYzVjZNMjAgOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTIyLjUgMjVzNC41LTcuNSAzLTEwLjVjMCAwLTEtMi41LTMtMi41cy0zIDIuNS0zIDIuNWMtMS41IDMgMyAxMC41IDMgMTAuNSIgZmlsbD0iI2ZmZiIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMTEuNSAzN2M1LjUgMy41IDE1LjUgMy41IDIxIDB2LTdzOS00LjUgNi0xMC41Yy00LTYuNS0xMy41LTMuNS0xNiA0VjI3di0zLjVjLTMuNS03LjUtMTMtMTAuNS0xNi00LTMgNiA1IDEwIDUgMTBWMzd6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTExLjUgMzBjNS41LTMgMTUuNS0zIDIxIDBtLTIxIDMuNWM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwIi8+PC9nPjwvc3ZnPg==", "wn": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0gMjIsMTAgQyAzMi41LDExIDM4LjUsMTggMzgsMzkgTCAxNSwzOSBDIDE1LDMwIDI1LDMyLjUgMjMsMTgiIHN0eWxlPSJmaWxsOiNmZmZmZmY7IHN0cm9rZTojMDAwMDAwOyIvPjxwYXRoIGQ9Ik0gMjQsMTggQyAyNC4zOCwyMC45MSAxOC40NSwyNS4zNyAxNiwyNyBDIDEzLDI5IDEzLjE4LDMxLjM0IDExLDMxIEMgOS45NTgsMzAuMDYgMTIuNDEsMjcuOTYgMTEsMjggQyAxMCwyOCAxMS4xOSwyOS4yMyAxMCwzMCBDIDksMzAgNS45OTcsMzEgNiwyNiBDIDYsMjQgMTIsMTQgMTIsMTQgQyAxMiwxNCAxMy44OSwxMi4xIDE0LDEwLjUgQyAxMy4yNyw5LjUwNiAxMy41LDguNSAxMy41LDcuNSBDIDE0LjUsNi41IDE2LjUsMTAgMTYuNSwxMCBMIDE4LjUsMTAgQyAxOC41LDEwIDE5LjI4LDguMDA4IDIxLDcgQyAyMiw3IDIyLDEwIDIyLDEwIiBzdHlsZT0iZmlsbDojZmZmZmZmOyBzdHJva2U6IzAwMDAwMDsiLz48cGF0aCBkPSJNIDkuNSAyNS41IEEgMC41IDAuNSAwIDEgMSA4LjUsMjUuNSBBIDAuNSAwLjUgMCAxIDEgOS41IDI1LjUgeiIgc3R5bGU9ImZpbGw6IzAwMDAwMDsgc3Ryb2tlOiMwMDAwMDA7Ii8+PHBhdGggZD0iTSAxNSAxNS41IEEgMC41IDEuNSAwIDEgMSAxNCwxNS41IEEgMC41IDEuNSAwIDEgMSAxNSAxNS41IHoiIHRyYW5zZm9ybT0ibWF0cml4KDAuODY2LDAuNSwtMC41LDAuODY2LDkuNjkzLC01LjE3MykiIHN0eWxlPSJmaWxsOiMwMDAwMDA7IHN0cm9rZTojMDAwMDAwOyIvPjwvZz48L3N2Zz4=", "wp": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGc+PHBhdGggZD0iTTIyLjUgOWMtMi4yMSAwLTQgMS43OS00IDQgMCAuODkuMjkgMS43MS43OCAyLjM4QzE3LjMzIDE2LjUgMTYgMTguNTkgMTYgMjFjMCAyLjAzLjk0IDMuODQgMi40MSA1LjAzLTMgMS4wNi03LjQxIDUuNTUtNy40MSAxMy40N2gyM2MwLTcuOTItNC40MS0xMi40MS03LjQxLTEzLjQ3IDEuNDctMS4xOSAyLjQxLTMgMi40MS01LjAzIDAtMi40MS0xLjMzLTQuNS0zLjI4LTUuNjIuNDktLjY3Ljc4LTEuNDkuNzgtMi4zOCAwLTIuMjEtMS43OS00LTQtNHoiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L3N2Zz4=", "wq": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik04IDEyYTIgMiAwIDEgMS00IDAgMiAyIDAgMSAxIDQgMHpNMjQuNSA3LjVhMiAyIDAgMSAxLTQgMCAyIDIgMCAxIDEgNCAwek00MSAxMmEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDB6TTE2IDguNWEyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDB6TTMzIDlhMiAyIDAgMSAxLTQgMCAyIDIgMCAxIDEgNCAweiIvPjxwYXRoIGQ9Ik05IDI2YzguNS0xLjUgMjEtMS41IDI3IDBsMi0xMi03IDExVjExbC01LjUgMTMuNS0zLTE1LTMgMTUtNS41LTE0VjI1TDcgMTRsMiAxMnpNOSAyNmMwIDIgMS41IDIgMi41IDQgMSAxLjUgMSAxIC41IDMuNS0xLjUgMS0xLjUgMi41LTEuNSAyLjUtMS41IDEuNS41IDIuNS41IDIuNSA2LjUgMSAxNi41IDEgMjMgMCAwIDAgMS41LTEgMC0yLjUgMCAwIC41LTEuNS0xLTIuNS0uNS0yLjUtLjUtMiAuNS0zLjUgMS0yIDIuNS0yIDIuNS00LTguNS0xLjUtMTguNS0xLjUtMjcgMHoiIHN0cm9rZS1saW5lY2FwPSJidXR0Ii8+PHBhdGggZD0iTTExLjUgMzBjMy41LTEgMTguNS0xIDIyIDBNMTIgMzMuNWM2LTEgMTUtMSAyMSAwIiBmaWxsPSJub25lIi8+PC9nPjwvc3ZnPg==", "wr": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NSA0NSI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05IDM5aDI3di0zSDl2M3pNMTIgMzZ2LTRoMjF2NEgxMnpNMTEgMTRWOWg0djJoNVY5aDV2Mmg1VjloNHY1IiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0zNCAxNGwtMyAzSDE0bC0zLTMiLz48cGF0aCBkPSJNMzEgMTd2MTIuNUgxNFYxNyIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMzEgMjkuNWwxLjUgMi41aC0yMGwxLjUtMi41Ii8+PHBhdGggZD0iTTExIDE0aDIzIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PC9nPjwvc3ZnPg=="};
+
+/* Minimal chess rules: FEN, legal moves, make move, SAN (Latin and Russian letters). */
+const Chess = (() => {
+  const FILES = 'abcdefgh';
+  const N8 = [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]];
+  const K8 = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+  const BD = [[1,1],[1,-1],[-1,1],[-1,-1]];
+  const RD = [[1,0],[-1,0],[0,1],[0,-1]];
+  let uid = 0;
+
+  const sqName = i => FILES[i % 8] + (Math.floor(i / 8) + 1);
+  const sqIdx = n => FILES.indexOf(n[0]) + (parseInt(n[1], 10) - 1) * 8;
+  const on = (f, r) => f >= 0 && f < 8 && r >= 0 && r < 8;
+
+  function parse(fen) {
+    const [placement, turn, castle, ep, half, full] = fen.trim().split(/\s+/);
+    const board = new Array(64).fill(null);
+    const rows = placement.split('/');
+    for (let ri = 0; ri < 8; ri++) {
+      let f = 0;
+      for (const ch of rows[ri]) {
+        if (/\d/.test(ch)) { f += +ch; continue; }
+        const r = 7 - ri;
+        board[r * 8 + f] = { t: ch.toLowerCase(), c: ch === ch.toUpperCase() ? 'w' : 'b', id: 'p' + (uid++) };
+        f++;
+      }
+    }
+    return { board, turn: turn || 'w', castle: castle && castle !== '-' ? castle : '',
+      ep: ep && ep !== '-' ? sqIdx(ep) : -1, full: +(full || 1) };
+  }
+
+  function clone(p) {
+    return { board: p.board.map(x => x ? { ...x } : null), turn: p.turn, castle: p.castle, ep: p.ep, full: p.full };
+  }
+
+  function attacked(p, sq, by) {
+    const f = sq % 8, r = sq >> 3, b = p.board;
+    const pr = by === 'w' ? r - 1 : r + 1;
+    for (const df of [-1, 1]) {
+      if (on(f + df, pr)) { const x = b[pr * 8 + f + df]; if (x && x.c === by && x.t === 'p') return true; }
+    }
+    for (const [df, dr] of N8) if (on(f + df, r + dr)) { const x = b[(r + dr) * 8 + f + df]; if (x && x.c === by && x.t === 'n') return true; }
+    for (const [df, dr] of K8) if (on(f + df, r + dr)) { const x = b[(r + dr) * 8 + f + df]; if (x && x.c === by && x.t === 'k') return true; }
+    for (const [dirs, kinds] of [[BD, 'bq'], [RD, 'rq']]) {
+      for (const [df, dr] of dirs) {
+        let ff = f + df, rr = r + dr;
+        while (on(ff, rr)) {
+          const x = b[rr * 8 + ff];
+          if (x) { if (x.c === by && kinds.includes(x.t)) return true; break; }
+          ff += df; rr += dr;
+        }
+      }
+    }
+    return false;
+  }
+
+  const kingSq = (p, c) => p.board.findIndex(x => x && x.t === 'k' && x.c === c);
+  const inCheck = (p, c) => { const k = kingSq(p, c); return k >= 0 && attacked(p, k, c === 'w' ? 'b' : 'w'); };
+
+  function pseudo(p) {
+    const out = [], b = p.board, me = p.turn, op = me === 'w' ? 'b' : 'w';
+    for (let s = 0; s < 64; s++) {
+      const pc = b[s];
+      if (!pc || pc.c !== me) continue;
+      const f = s % 8, r = s >> 3;
+      const add = (to, extra = {}) => out.push({ from: s, to, piece: pc.t, captured: b[to] ? b[to].t : null, ...extra });
+      if (pc.t === 'p') {
+        const dir = me === 'w' ? 1 : -1, start = me === 'w' ? 1 : 6, last = me === 'w' ? 7 : 0;
+        const one = (r + dir) * 8 + f;
+        if (on(f, r + dir) && !b[one]) {
+          add(one, r + dir === last ? { promo: 'q' } : {});
+          const two = (r + 2 * dir) * 8 + f;
+          if (r === start && !b[two]) add(two, { double: true });
+        }
+        for (const df of [-1, 1]) {
+          if (!on(f + df, r + dir)) continue;
+          const t = (r + dir) * 8 + f + df;
+          if (b[t] && b[t].c === op) add(t, r + dir === last ? { promo: 'q' } : {});
+          else if (t === p.ep) out.push({ from: s, to: t, piece: 'p', captured: 'p', ep: true });
+        }
+      } else if (pc.t === 'n' || pc.t === 'k') {
+        for (const [df, dr] of (pc.t === 'n' ? N8 : K8)) {
+          if (!on(f + df, r + dr)) continue;
+          const t = (r + dr) * 8 + f + df;
+          if (!b[t] || b[t].c === op) add(t);
+        }
+        if (pc.t === 'k') {
+          const home = me === 'w' ? 4 : 60;
+          if (s === home && !attacked(p, s, op)) {
+            const K = me === 'w' ? 'K' : 'k', Q = me === 'w' ? 'Q' : 'q';
+            if (p.castle.includes(K) && !b[s + 1] && !b[s + 2] && b[s + 3] && b[s + 3].t === 'r' &&
+                !attacked(p, s + 1, op) && !attacked(p, s + 2, op)) add(s + 2, { castle: 'K' });
+            if (p.castle.includes(Q) && !b[s - 1] && !b[s - 2] && !b[s - 3] && b[s - 4] && b[s - 4].t === 'r' &&
+                !attacked(p, s - 1, op) && !attacked(p, s - 2, op)) add(s - 2, { castle: 'Q' });
+          }
+        }
+      } else {
+        const dirs = pc.t === 'b' ? BD : pc.t === 'r' ? RD : BD.concat(RD);
+        for (const [df, dr] of dirs) {
+          let ff = f + df, rr = r + dr;
+          while (on(ff, rr)) {
+            const t = rr * 8 + ff;
+            if (b[t]) { if (b[t].c === op) add(t); break; }
+            add(t); ff += df; rr += dr;
+          }
+        }
+      }
+    }
+    return out;
+  }
+
+  function make(p, m) {
+    const q = clone(p), b = q.board, pc = b[m.from];
+    b[m.to] = pc; b[m.from] = null;
+    if (m.ep) b[m.to + (p.turn === 'w' ? -8 : 8)] = null;
+    if (m.promo) pc.t = m.promo;
+    if (m.castle === 'K') { b[m.from + 1] = b[m.from + 3]; b[m.from + 3] = null; }
+    if (m.castle === 'Q') { b[m.from - 1] = b[m.from - 4]; b[m.from - 4] = null; }
+    const strip = (chars) => { for (const c of chars) q.castle = q.castle.replace(c, ''); };
+    if (pc.t === 'k') strip(p.turn === 'w' ? 'KQ' : 'kq');
+    for (const s of [m.from, m.to]) {
+      if (s === 0) strip('Q'); if (s === 7) strip('K'); if (s === 56) strip('q'); if (s === 63) strip('k');
+    }
+    q.ep = m.double ? (m.from + m.to) / 2 : -1;
+    if (p.turn === 'b') q.full = p.full + 1;
+    q.turn = p.turn === 'w' ? 'b' : 'w';
+    return q;
+  }
+
+  function legal(p) {
+    return pseudo(p).filter(m => !inCheck(make(p, m), p.turn));
+  }
+
+  const RU = { n: 'К', b: 'С', r: 'Л', q: 'Ф', k: 'Кр' };
+  const EN = { n: 'N', b: 'B', r: 'R', q: 'Q', k: 'K' };
+
+  function san(p, m, ru = true) {
+    const L = ru ? RU : EN;
+    let s;
+    if (m.castle) s = m.castle === 'K' ? 'O-O' : 'O-O-O';
+    else {
+      const cap = !!m.captured;
+      if (m.piece === 'p') {
+        s = (cap ? FILES[m.from % 8] + 'x' : '') + sqName(m.to) + (m.promo ? '=' + L[m.promo] : '');
+      } else {
+        const others = legal(p).filter(o => o.piece === m.piece && o.to === m.to && o.from !== m.from);
+        let dis = '';
+        if (others.length) {
+          if (!others.some(o => o.from % 8 === m.from % 8)) dis = FILES[m.from % 8];
+          else if (!others.some(o => (o.from >> 3) === (m.from >> 3))) dis = String((m.from >> 3) + 1);
+          else dis = sqName(m.from);
+        }
+        s = L[m.piece] + dis + (cap ? 'x' : '') + sqName(m.to);
+      }
+    }
+    const after = make(p, m);
+    if (inCheck(after, after.turn)) s += legal(after).length ? '+' : '#';
+    return s;
+  }
+
+  const uci = m => sqName(m.from) + sqName(m.to);
+  function findUci(p, u) { return legal(p).find(m => uci(m) === u.slice(0, 4)) || null; }
+  const isMate = p => inCheck(p, p.turn) && legal(p).length === 0;
+
+  return { parse, clone, legal, make, san, uci, findUci, inCheck, isMate, kingSq, sqName, sqIdx };
+})();
+
+const HW = {"id":"italian-2","fileName":"domashka-italyanskaya","title":"Итальянская партия","eyebrow":"Домашнее задание · шахматы","subtitle":"Связка на g5, прыжок коня на d5, штурм h3–g4–g5 и уничтожение защитника.","planText":"Повторяем урок: схема итальянской, связка коня f6, прыжок на d5 и пешечный штурм. В конце — задачи на мат, где сначала надо найти защитника.","timeText":"Примерно 30–40 минут.","parts":[{"n":1,"name":"Дебют","desc":"Схема итальянской партии и связка Сg5"},{"n":2,"name":"Идея 1: конь d5","desc":"Второй удар по связанному коню f6"},{"n":3,"name":"Идея 2: штурм","desc":"Если чёрные сыграли h6: h3, g4, g5"},{"n":4,"name":"Убери защитника","desc":"Найди защитника и уничтожь его — будет мат"}],"tasks":[{"id":"A1","part":1,"kind":"board","title":"Сыграй дебют по памяти","prompt":"Ты играешь белыми. Делай ходы нашей схемы, компьютер ответит за чёрных. Дойди до связки.","fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","line":["e2e4","e7e5","g1f3","b8c6","f1c4","f8c5","d2d3","g8f6","c1g5"],"hints":["Первым ходом займи центр пешкой.","Выведи коня так, чтобы он сразу напал на пешку e5.","Слон выходит на диагональ, которая смотрит на поле f7.","Тихий ход пешкой: защити e4 и открой дорогу слону c1.","Слон c1 выходит и «приклеивает» коня f6 к ферзю d8."],"comments":["e4 — пешка в центре, открыты дороги ферзю и слону.","Кf3 — развиваем коня и нападаем на e5.","Сc4 — слон смотрит на самое слабое место чёрных, поле f7.","d3 — пешка e4 под защитой, слону c1 открыта дорога.","Сg5 — связка!"],"wrongMsg":"В нашей схеме здесь другой ход. Вспомни урок.","explain":"Схема готова. Конь f6 связан: уйти не может, за ним ферзь. Дальше по плану конь идёт на c3, а потом прыгает на d5.","doneArrows":[["g5","d8"]],"moves":"Решение: 5 ходов","start":"Ты играешь белыми. Делай ходы нашей схемы."},{"id":"Q1","part":1,"kind":"quiz","title":"Что делает слон g5?","fen":"r1bqk2r/pppp1ppp/2n2n2/2b1p1B1/2B1P3/3P1N2/PPP2PPP/RN1QK2R b KQkq - 2 5","arrows":[["g5","d8"]],"lastMove":["c1","g5"],"question":"Посмотри на стрелку. Что слон g5 сделал с конём f6?","options":[{"t":"Связал его: если конь уйдёт, слон заберёт ферзя d8","ok":true,"why":"Именно. Связка — это когда фигура не может уйти, потому что за ней стоит фигура дороже."},{"t":"Выигрывает коня прямо сейчас","why":"Пока нет: конь f6 защищён пешкой g7 и ферзём. Одного нападения мало."},{"t":"Защитил нашу пешку e4","why":"Слон g5 не смотрит на e4. Проследи, куда идёт его диагональ."},{"t":"Освободил место для короткой рокировки","why":"Место для рокировки освобождали конь f3 и слон c4. Посмотри на линию g5–f6–d8."}]},{"id":"B1","part":2,"kind":"board","title":"Найди ход по плану","prompt":"Чёрные сыграли d6 и рокировались. Конь f6 связан. Каким ходом напасть на него второй раз?","fen":"r1bq1rk1/ppp2ppp/2np1n2/2b1p1B1/2B1P3/2NP1N2/PPP2PPP/R2QK2R w KQ - 2 7","lastMove":["e8","g8"],"line":["c3d5"],"hints":["Какой белый конь за один прыжок может встать рядом и ударить по f6?"],"explain":"Кd5! Теперь коня f6 бьют двое: слон g5 и конь d5. А убежать он не может, за ним ферзь.","doneArrows":[["d5","f6"],["g5","f6"]],"moves":"Решение: 1 ход","wrongMsg":"Это не по плану. Конь f6 связан: ударь по нему второй раз."},{"id":"B2","part":2,"kind":"board","title":"Чёрные прогоняют слона","prompt":"Чёрные сыграли h6 и нападают на слона g5. Отступать? Нет! Сначала найди, какая чёрная фигура связана.","fen":"r1bq1rk1/ppp2pp1/2np1n1p/2bNp1B1/2B1P3/3P1N2/PPP2PPP/R2QK2R w KQ - 0 8","lastMove":["h7","h6"],"defender":{"sq":"f6","ask":"Нажми на связанную фигуру.","ok":"Верно, конь f6. Теперь найди удар — тебе нужно сделать два хода.","bad":"Не она. Связанная фигура стоит между нашим слоном g5 и ферзём d8.","hint":"Проведи пальцем линию от слона g5 к ферзю d8. Кто стоит посередине?","step1":"1. Найди связанную фигуру","step2":"2. Найди удар"},"line":["d5f6","g7f6","g5h6"],"hints":["Бей связанного коня, да ещё и с шахом!","Слон g5 под ударом пешки f6. Уйди так, чтобы заодно забрать пешку."],"explain":"Кxf6+ — шах, поэтому выбора у чёрных нет: gxf6. Потом Сxh6: слон забрал пешку и нападает на ладью f8. Скоро белые заберут ладью за слона, а король чёрных остался без защиты.","doneArrows":[["h6","f8"]],"moves":"Решение: 2 хода","wrong":{"0":{"g5h6":{"r":"g7h6","p":["c2c3","f6d5","c4d5"],"k":"l","x":"слона за пешку"},"g5f6":{"r":"g7f6","p":["f3h4","f6f5","d1h5"],"k":"e"},"g5h4":{"r":"g7g5","p":["h4g3","c6a5","b2b4"],"k":"e"},"g5f4":{"r":"e5f4","p":["d3d4","c5b6","e1g1"],"k":"l","x":"слона"},"g5e3":{"r":"c5e3","p":["f2e3","c8e6","d5f6"],"k":"e"},"g5d2":{"r":"c8e6","p":["e1g1","e6d5","c4d5"],"k":"e"},"g5c1":{"r":"c8e6","p":["d5f6","d8f6","c4e6"],"k":"e"},"d5e7":{"r":"d8e7","p":["g5f6","e7f6","c2c3"],"k":"l","x":"слона"},"d5c7":{"r":"d8c7","p":["g5f6","g7f6","e1g1"],"k":"l","x":"слона за пешку"},"d5b6":{"r":"c5b6","p":["g5h4","c8d7","e1g1"],"k":"l","x":"коня"},"d5f4":{"r":"h6g5","p":["f4e2","c8g4","e1g1"],"k":"l","x":"слона"},"d5b4":{"r":"h6g5","p":["b4c6","b7c6","e1g1"],"k":"l","x":"слона"},"d5e3":{"r":"h6g5","p":["f3g5","c6a5","e1g1"],"k":"l","x":"слона за пешку"},"d5c3":{"r":"h6g5","p":["c3a4","g5g4","f3d2"],"k":"l","x":"слона"},"c4a6":{"r":"h6g5","p":["a6c4","c6a5","c4b3"],"k":"l","x":"слона"},"c4b5":{"r":"h6g5","p":["b5c6","b7c6","d5c3"],"k":"l","x":"слона"},"c4b3":{"r":"h6g5","p":["f3g5","f6g4","g5h3"],"k":"l","x":"слона за пешку"},"f3e5":{"r":"h6g5","p":["e5c6","b7c6","d5f6"],"k":"l","x":"слона за пешку"},"f3h4":{"r":"h6g5","p":["h4g6","c5f2","e1f2"],"k":"l","x":"слона"},"f3d4":{"r":"h6g5","p":["d4b3","f6d5","e4d5"],"k":"l","x":"слона"},"f3d2":{"r":"h6g5","p":["d2b3","f6d5","e4d5"],"k":"l","x":"слона"},"f3g1":{"r":"h6g5","p":["d1d2","f6d5","e4d5"],"k":"l","x":"слона"},"h1g1":{"r":"h6g5","p":["h2h3","f6d5","c4d5"],"k":"l","x":"слона"},"h1f1":{"r":"h6g5","p":["f3g5","f6d5","d1h5"],"k":"l","x":"слона и коня за пешку"},"e1e2":{"r":"h6g5","p":["h2h3","c6d4","f3d4"],"k":"l","x":"слона"},"e1d2":{"r":"h6g5","p":["d2c1","f6d5","e4d5"],"k":"l","x":"слона"},"e1f1":{"r":"h6g5","p":["d5f6","d8f6","h2h3"],"k":"l","x":"слона"},"d1e2":{"r":"h6g5","p":["h2h3","f6d5","c4d5"],"k":"l","x":"слона"},"d1d2":{"r":"h6g5","p":["d2g5","f6d5","g5d8"],"k":"l","x":"слона за пешку"},"d1c1":{"r":"h6g5","p":["c1g5","f6d5","g5d8"],"k":"l","x":"слона за пешку"},"d1b1":{"r":"h6g5","p":["h2h3","f6d5","c4d5"],"k":"l","x":"слона"},"a1c1":{"r":"h6g5","p":["f3g5","b7b5","c4b3"],"k":"l","x":"слона за пешку"},"a1b1":{"r":"h6g5","p":["h2h3","f6d5","c4d5"],"k":"l","x":"слона"},"e1g1":{"r":"h6g5","p":["f3g5","f6d5","d1h5"],"k":"l","x":"слона и коня за пешку"},"d3d4":{"r":"h6g5","p":["d4c5","f6e4","h2h4"],"k":"l","x":"пешку"},"h2h3":{"r":"h6g5","p":["c2c3","a7a5","d1d2"],"k":"l","x":"слона"},"g2g3":{"r":"h6g5","p":["d1d2","f6d5","c4d5"],"k":"l","x":"слона"},"c2c3":{"r":"h6g5","p":["b2b4","g5g4","b4c5"],"k":"l","x":"слона"},"b2b3":{"r":"h6g5","p":["f3d2","g5g4","e1g1"],"k":"l","x":"слона"},"a2a3":{"r":"h6g5","p":["h2h3","c6d4","d5e3"],"k":"l","x":"слона"},"h2h4":{"r":"h6g5","p":["d5f6","d8f6","h4g5"],"k":"l","x":"слона за пешку"},"g2g4":{"r":"h6g5","p":["h1g1","c6a5","b2b4"],"k":"l","x":"слона"},"b2b4":{"r":"c5f2","p":["e1f2","h6g5","h2h3"],"k":"l","x":"пешку"},"a2a4":{"r":"h6g5","p":["f3g5","c5f2","e1f2"],"k":"b"}},"2":{"g5f6":{"r":"d8f6","p":["c2c3","g8h7","d1e2"],"k":"l","x":"слона за пешку"},"g5h4":{"r":"g8g7","p":["c2c3","c6e7","d3d4"],"k":"e"},"g5f4":{"r":"e5f4","p":["d1d2","c6e5","e1c1"],"k":"l","x":"слона"},"g5e3":{"r":"c5e3","p":["f2e3","c6a5","c4b3"],"k":"e"},"g5d2":{"r":"g8h7","p":["e1g1","c8e6","f3h4"],"k":"e"},"g5c1":{"r":"g8g7","p":["f3h4","f6f5","h4f5"],"k":"e"},"c4f7":{"r":"g8f7","p":["g5h6","f8g8","e1g1"],"k":"l","x":"слона за две пешки"},"c4e6":{"r":"f6g5","p":["e6c8","d8c8","e1g1"],"k":"l","x":"слона"},"c4a6":{"r":"f6g5","p":["a6c4","c6a5","f3d2"],"k":"l","x":"слона"},"c4d5":{"r":"f6g5","p":["e1g1","c6e7","d5b3"],"k":"l","x":"слона"},"c4b5":{"r":"f6g5","p":["h2h3","c6e7","b5c4"],"k":"l","x":"слона"},"c4b3":{"r":"f6g5","p":["h2h3","g8g7","d1d2"],"k":"l","x":"слона"},"f3e5":{"r":"f6g5","p":["e5c6","b7c6","d3d4"],"k":"l","x":"слона за пешку"},"f3h4":{"r":"f6g5","p":["h4f5","c8f5","e4f5"],"k":"l","x":"слона"},"f3d4":{"r":"f6g5","p":["d4c6","b7c6","e1g1"],"k":"l","x":"слона"},"f3d2":{"r":"f6g5","p":["c2c3","g8g7","b2b4"],"k":"l","x":"слона"},"f3g1":{"r":"f6g5","p":["c2c3","d8f6","d1f3"],"k":"l","x":"слона"},"h1g1":{"r":"f6g5","p":["h2h3","c6a5","d1e2"],"k":"l","x":"слона"},"h1f1":{"r":"f6g5","p":["c2c3","g5g4","f3d2"],"k":"l","x":"слона"},"e1e2":{"r":"f6g5","p":["c2c3","g5g4","f3e1"],"k":"l","x":"слона"},"e1d2":{"r":"f6g5","p":["d2c1","c5f2","a2a4"],"k":"l","x":"слона"},"e1f1":{"r":"f6g5","p":["h2h3","c6a5","c4d5"],"k":"l","x":"слона"},"d1e2":{"r":"f6g5","p":["c2c3","a7a5","e1g1"],"k":"l","x":"слона"},"d1d2":{"r":"f6g5","p":["h2h4","c6d4","e1c1"],"k":"l","x":"слона"},"d1c1":{"r":"f6g5","p":["h2h4","c6d4","f3d4"],"k":"l","x":"слона"},"d1b1":{"r":"f6g5","p":["h2h3","d8f6","c2c3"],"k":"l","x":"слона"},"a1c1":{"r":"f6g5","p":["e1g1","c6a5","c4b3"],"k":"l","x":"слона"},"a1b1":{"r":"f6g5","p":["h2h3","a7a5","c2c3"],"k":"l","x":"слона"},"e1g1":{"r":"f6g5","p":["c2c3","a7a5","c4d5"],"k":"l","x":"слона"},"d3d4":{"r":"f6g5","p":["d4c5","d6c5","h2h3"],"k":"l","x":"пешку"},"h2h3":{"r":"f6g5","p":["c2c3","d8f6","a2a4"],"k":"l","x":"слона"},"g2g3":{"r":"f6g5","p":["c2c3","c8h3","d1e2"],"k":"l","x":"слона"},"c2c3":{"r":"f6g5","p":["h2h3","c5b6","d1c2"],"k":"l","x":"слона"},"b2b3":{"r":"f6g5","p":["c2c3","g5g4","f3d2"],"k":"l","x":"слона"},"a2a3":{"r":"f6g5","p":["h2h3","d8f6","d1e2"],"k":"l","x":"слона"},"h2h4":{"r":"f6g5","p":["h4g5","c6a5","d1d2"],"k":"l","x":"слона за пешку"},"g2g4":{"r":"f6g5","p":["h2h3","c6e7","c2c3"],"k":"l","x":"слона"},"b2b4":{"r":"c5f2","p":["e1f2","f6g5","h2h3"],"k":"l","x":"пешку"},"a2a4":{"r":"f6g5","p":["h2h3","g8g7","c2c3"],"k":"l","x":"слона"}}},"alts":{}},{"id":"Q3","part":2,"kind":"quiz","title":"Что сломалось у чёрных?","fen":"r1bq1rk1/ppp2p2/2np1p1B/2b1p3/2B1P3/3P1N2/PPP2PPP/R2QK2R b KQ - 0 9","lastMove":["g5","h6"],"question":"После Кxf6+ gxf6 Сxh6 посмотри на чёрного короля g8. Что у него не так?","options":[{"t":"Рядом с королём пропали пешки g и h, к нему легко подобраться","ok":true,"why":"Да. Пешки — это «забор» короля. Забор сломан, линия g открыта, и наши фигуры могут подойти к королю."},{"t":"Ничего страшного, пешек у чёрных даже больше","why":"Наоборот: пешки g7 и h6 пропали, а пешки f7 и f6 стоят друг за другом (сдвоены)."},{"t":"Королю уже поставлен мат","why":"Мата пока нет. Но защищать короля стало очень трудно."},{"t":"Чёрные больше не могут рокироваться","why":"Они уже рокировались. Посмотри на пешки вокруг короля."}]},{"id":"Q7","part":2,"kind":"quiz","title":"Связка против нас","fen":"r2qk2r/ppp2ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPP2PPP/R2QK2R w KQkq - 2 7","lastMove":["c8","g4"],"arrows":[["g4","d1"]],"question":"В другой партии чёрные не рокировались, а сыграли Сg4. Что они сделали?","options":[{"t":"Связали нашего коня f3 с ферзём d1, нашу же идею","ok":true,"why":"Верно. Связка работает в обе стороны. Если конь f3 уйдёт, слон заберёт ферзя d1. Всегда смотри, что стоит за твоими фигурами."},{"t":"Напали на пешку h2","why":"Слон g4 не бьёт h2. Проследи диагональ g4–f3–e2–d1."},{"t":"Просто развили слона, ничего опасного","why":"Развили, но не только. За конём f3 стоит наш ферзь."},{"t":"Готовят мат на f2","why":"Мата на f2 нет. Посмотри, кто стоит за конём f3."}]},{"id":"B3","part":2,"kind":"board","title":"А наш план работает?","prompt":"Та же позиция: наш конь f3 связан. Но и конь f6 у чёрных связан! Найди ход по нашему плану.","fen":"r2qk2r/ppp2ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPP2PPP/R2QK2R w KQkq - 2 7","lastMove":["c8","g4"],"line":["c3d5"],"hints":["Тот же прыжок, что и раньше: второй удар по коню f6."],"explain":"Кd5! Наш конь d5 не связан и вместе со слоном g5 бьёт по f6. Если чёрные возьмут Сxf3, отвечаем gxf3, и угроза Кxf6+ никуда не делась.","doneArrows":[["d5","f6"],["g5","f6"]],"moves":"Решение: 1 ход","wrongMsg":"Это не по плану. Конь f6 связан: ударь по нему второй раз."},{"id":"Q4","part":3,"kind":"quiz","title":"Пешка h6 мешает","fen":"r1bqk2r/pppp1pp1/2n2n1p/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 6","lastMove":["h7","h6"],"arrows":[["h6","g5"]],"question":"Здесь чёрные заранее сыграли h6. Слону на g5 нельзя: пешка его съест. Какой план?","options":[{"t":"Всё равно Сg5, пусть берут","why":"Тогда hxg5, и мы просто отдали слона."},{"t":"Пешки вперёд: h3, g4 и g5. Пешка h6 разменяется, и поле g5 освободится","ok":true,"why":"Да! После g5 hxg5 на g5 встаёт слон, и связка возвращается. А у чёрного короля открывается линия h."},{"t":"Короткая рокировка и ждать","why":"Рокироваться полезно, но связку это не вернёт. Нужен план."},{"t":"Кg5, нападая на f7","why":"Коня на g5 сразу съест пешка h6."}]},{"id":"Q5","part":3,"kind":"quiz","title":"Почему сначала h3?","fen":"r1bqk2r/pppp1pp1/2n2n1p/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQK2R w KQkq - 0 6","lastMove":["h7","h6"],"arrows":[["f6","g4"]],"question":"Почему мы играем сначала h3 и только потом g4?","options":[{"t":"Чтобы пешка g4 была под защитой, иначе её съест конь f6","ok":true,"why":"Верно. Если сразу g4, то Кxg4 — и пешка потеряна. А с пешкой на h3 бить на g4 нельзя: hxg4."},{"t":"Чтобы сделать королю «форточку»","why":"Форточка нужна против мата по последней горизонтали. Здесь цель другая."},{"t":"Порядок не важен","why":"Важен! Представь, что мы сразу сыграли g4. Что сделает конь f6?"},{"t":"Чтобы напасть на пешку h6","why":"Пешка h3 на h6 не нападает. Она охраняет поле g4."}]},{"id":"C2","part":3,"kind":"board","title":"Последний шаг штурма","prompt":"Мы уже сыграли h3 и g4, а чёрные рокировались. Доведи план до конца — тебе нужно сделать два хода.","fen":"r1bq1rk1/ppp2pp1/2np1n1p/2b1p3/2B1P1P1/2NP1N1P/PPP2P2/R1BQK2R w KQ - 1 8","lastMove":["e8","g8"],"line":["g4g5","h6g5","c1g5"],"hints":["Пешка g4, вперёд! Она нападёт сразу на коня f6 и пешку h6.","Забери на g5 той фигурой, которая снова свяжет коня f6."],"explain":"g5! Пешка напала на коня f6 и пешку h6. После hxg5 Сxg5 связка вернулась, а линия h у чёрного короля открылась.","doneArrows":[["g5","d8"]],"moves":"Решение: 2 хода","wrongMsg":"Это не по плану. Вспомни штурм: пешка идёт на g5, а потом слон снова встаёт на g5 и связывает коня."},{"id":"C3","part":3,"kind":"board","title":"Связка вернулась","prompt":"Чёрные сыграли a6 и не заметили опасности. Найди удар и выиграй ферзя. Это три хода.","fen":"r1bq1rk1/1pp2pp1/p1np1n2/2b1p1B1/2B1P3/2NP1N1P/PPP2P2/R2QK2R w KQ - 0 10","lastMove":["a7","a6"],"line":["c3d5","f6d5","g5d8","c6d8","c4d5"],"alts":{"4":["e4d5"]},"hints":["Конь f6 связан. Ударь по нему второй раз, как в первой идее.","Конь ушёл с f6. Кого теперь видит слон g5?","Забери коня d5."],"explain":"Кd5! Чёрные взяли Кxd5, и связка сработала: Сxd8. Ферзь за слона! А потом забираем ещё и коня d5.","moves":"Решение: 3 хода","wrong":{"0":{"g5h6":{"r":"g7h6","p":["d1d2","g8h7","e1c1"],"k":"l","x":"слона"},"g5f6":{"r":"d8f6","p":["c3d5","f6d8","h1g1"],"k":"e"},"g5h4":{"r":"c8e6","p":["c3d5","e6d5","c4d5"],"k":"e"},"g5f4":{"r":"e5f4","p":["c4b3","c5b4","d1e2"],"k":"l","x":"слона"},"g5e3":{"r":"c6d4","p":["h1g1","b7b5","c4b3"],"k":"e"},"g5d2":{"r":"c6a5","p":["c4b3","c7c6","d1e2"],"k":"e"},"g5c1":{"r":"c8e6","p":["c1g5","e6c4","d3c4"],"k":"e"},"c4f7":{"r":"f8f7","p":["c3d5","c8e6","d5f6"],"k":"l","x":"слона за пешку"},"c4e6":{"r":"f7e6","p":["h1g1","d8e8","g5e3"],"k":"l","x":"слона"},"c4a6":{"r":"c5b4","p":["a6c4","c8e6","c4e6"],"k":"e"},"c4d5":{"r":"c8e6","p":["h1g1","g8h8","d5c6"],"k":"e"},"c4b5":{"r":"c5b4","p":["b5c6","b7c6","f3d2"],"k":"e"},"c4b3":{"r":"c5b4","p":["h1g1","c8e6","e1e2"],"k":"e"},"f3e5":{"r":"c6e5","p":["d1e2","c5b4","c4b3"],"k":"l","x":"коня за пешку"},"f3h4":{"r":"c8e6","p":["c3d5","e6d5","c4d5"],"k":"e"},"f3d4":{"r":"c5d4","p":["c3d5","d4f2","e1f2"],"k":"l","x":"коня"},"f3h2":{"r":"d6d5","p":["e4d5","c6d4","c3e4"],"k":"e"},"f3d2":{"r":"c8e6","p":["c3d5","e6d5","e4d5"],"k":"w"},"f3g1":{"r":"c5b4","p":["g1f3","c6d4","e1f1"],"k":"e"},"c3b5":{"r":"a6b5","p":["c4b5","d6d5","b5c6"],"k":"l","x":"коня за пешку"},"c3a4":{"r":"b7b5","p":["c4d5","b5a4","d5c6"],"k":"e"},"c3e2":{"r":"c6a5","p":["c4b3","c7c6","e2c3"],"k":"e"},"c3b1":{"r":"c6a5","p":["c4b3","c7c6","b1c3"],"k":"e"},"h1h2":{"r":"c5b4","p":["e1e2","b4c3","b2c3"],"k":"e"},"h1g1":{"r":"c5b4","p":["f3d2","c8e6","g5h6"],"k":"e"},"h1f1":{"r":"c5b4","p":["a2a3","b4c3","b2c3"],"k":"e"},"e1e2":{"r":"c8e6","p":["c3d5","e6d5","c4d5"],"k":"e"},"e1d2":{"r":"c6d4","p":["h1g1","d4e6","c4e6"],"k":"e"},"e1f1":{"r":"d6d5","p":["c3d5","c5e7","d5e7"],"k":"w"},"d1e2":{"r":"c5b4","p":["e1c1","b4c3","b2c3"],"k":"e"},"d1d2":{"r":"c5b4","p":["a2a3","b4c3","d2c3"],"k":"e"},"d1c1":{"r":"c5b4","p":["h1g1","b4c3","b2c3"],"k":"e"},"d1b1":{"r":"c5b4","p":["e1e2","b4c3","b2c3"],"k":"e"},"a1c1":{"r":"c5b4","p":["e1e2","b4c3","b2c3"],"k":"e"},"a1b1":{"r":"c5b4","p":["a2a3","b4c3","b2c3"],"k":"e"},"e1g1":{"r":"d8d7","p":["g5f6","d7h3","f3h2"],"k":"b"},"h3h4":{"r":"c8g4","p":["c3d5","c6d4","g5f6"],"k":"e"},"d3d4":{"r":"c5b4","p":["d4d5","c6d4","f3d4"],"k":"e"},"b2b3":{"r":"c5b4","p":["g5d2","b4c3","d2c3"],"k":"b"},"a2a3":{"r":"c8e6","p":["c3d5","e6d5","c4d5"],"k":"e"},"b2b4":{"r":"c5b4","p":["g5d2","b4c3","d2c3"],"k":"l","x":"пешку"},"a2a4":{"r":"c5b4","p":["e1e2","b4c3","b2c3"],"k":"e"}},"2":{"g5e7":{"r":"d5e7","p":["f3g5","g7g6","c2c3"],"k":"l","x":"слона"},"g5h6":{"r":"g7h6","p":["c4d5","g8h7","d1e2"],"k":"b"},"g5f6":{"r":"d5f6","p":["c2c3","d6d5","e4d5"],"k":"l","x":"слона"},"g5h4":{"r":"d5f6","p":["d1d2","c8e6","h1g1"],"k":"b"},"g5f4":{"r":"d5f4","p":["c2c3","f4h3","d3d4"],"k":"l","x":"слона"},"g5e3":{"r":"d5e3","p":["f2e3","c5e3","d1e2"],"k":"l","x":"пешку"},"g5d2":{"r":"d5f4","p":["d2f4","e5f4","d3d4"],"k":"b"},"g5c1":{"r":"d5f6","p":["c1g5","c6a5","d1e2"],"k":"b"},"c4a6":{"r":"d5f6","p":["a6b5","d6d5","b5c6"],"k":"b"},"c4d5":{"k":"s","t":"тоже неплохо, но есть ход сильнее. Какая чёрная фигура теперь открыта для слона g5?"},"c4b5":{"r":"f7f6","p":["b5c6","b7c6","g5d2"],"k":"b"},"c4b3":{"r":"d5f6","p":["c2c3","d6d5","b3d5"],"k":"b"},"f3e5":{"r":"d8g5","p":["c4d5","c6e5","d1e2"],"k":"l","x":"слона за пешку"},"f3h4":{"r":"d8g5","p":["c4d5","g5h4","d1d2"],"k":"l","x":"слона"},"f3d4":{"r":"d8g5","p":["c4d5","c6d4","e1f1"],"k":"l","x":"слона"},"f3h2":{"r":"d8g5","p":["c4d5","c5f2","e1f2"],"k":"b"},"f3d2":{"r":"d8g5","p":["c4d5","g5g2","d1f3"],"k":"b"},"f3g1":{"r":"d8g5","p":["c4d5","g5g2","d1f3"],"k":"b"},"h1h2":{"r":"d5f6","p":["c2c3","c6a5","b2b4"],"k":"b"},"h1g1":{"r":"d5f6","p":["c2c3","c6a5","b2b4"],"k":"b"},"h1f1":{"r":"c5b4","p":["c2c3","d5c3","b2c3"],"k":"b"},"e1e2":{"r":"d5f4","p":["e2f1","d8e8","g5f4"],"k":"b"},"e1d2":{"r":"d5f6","p":["d1e2","c6a5","c4b3"],"k":"b"},"e1f1":{"r":"d5e7","p":["g5h4","d6d5","c4d5"],"k":"b"},"d1e2":{"r":"d5f4","p":["g5f4","e5f4","e1c1"],"k":"b"},"d1d2":{"r":"d5f6","p":["h1g1","c8e6","g5h4"],"k":"b"},"d1c1":{"r":"d5f6","p":["h1g1","c8e6","g5h4"],"k":"b"},"d1b1":{"r":"d5e7","p":["h1g1","g8h8","f3h4"],"k":"b"},"a1c1":{"r":"d5f6","p":["c2c3","c5b6","f3h4"],"k":"b"},"a1b1":{"r":"d5f6","p":["c2c3","c6a5","b2b4"],"k":"b"},"e1g1":{"r":"d5f6","p":["g1h2","d6d5","c4b3"],"k":"b"},"e4d5":{"r":"c6e7","p":["f3d2","d8d7","d2e4"],"k":"b"},"h3h4":{"r":"d5f6","p":["c2c3","c6a5","b2b4"],"k":"b"},"d3d4":{"r":"c5b4","p":["e1f1","d5e7","c2c3"],"k":"b"},"c2c3":{"r":"d5f6","p":["h1g1","c6a5","b2b4"],"k":"b"},"b2b3":{"r":"c5b4","p":["e1f1","d5e7","f1g2"],"k":"b"},"a2a3":{"r":"d5e7","p":["d1e2","d8e8","e1c1"],"k":"b"},"b2b4":{"r":"c5b4","p":["e1f1","d5e7","f1g2"],"k":"l","x":"пешку"},"a2a4":{"r":"d5f6","p":["h1g1","c8e6","d1e2"],"k":"b"}},"4":{"c4a6":{"r":"d5b6","p":["d3d4","e5d4","a6d3"],"k":"w"},"c4b5":{"r":"d5f4","p":["b5c4","b7b5","c4b3"],"k":"w"},"c4b3":{"r":"d5f4","p":["d1d2","d8e6","e1c1"],"k":"w"},"f3g5":{"r":"d5f4","p":["h1g1","g7g6","c2c3"],"k":"w"},"f3e5":{"r":"d5f4","p":["e5f3","b7b5","c4b3"],"k":"w"},"f3h4":{"r":"d5f4","p":["h1g1","b7b5","c4b3"],"k":"w"},"f3d4":{"r":"c5d4","p":["c4d5","d4b2","a1b1"],"k":"w"},"f3h2":{"r":"d5f4","p":["h2f3","b7b5","c4b3"],"k":"w"},"f3d2":{"r":"d5f4","p":["d1f3","b7b5","c4b3"],"k":"w"},"f3g1":{"r":"d5f4","p":["g1e2","d8e6","e2f4"],"k":"w"},"h1h2":{"r":"d5f6","p":["d1d2","c8e6","c4e6"],"k":"w"},"h1g1":{"r":"d5f4","p":["d3d4","e5d4","d1d2"],"k":"w"},"h1f1":{"r":"d5f4","p":["c2c3","b7b5","c4b3"],"k":"w"},"e1e2":{"r":"d5f4","p":["e2f1","c8h3","f1g1"],"k":"w"},"e1d2":{"r":"d5f4","p":["d1g1","c8e6","c4b3"],"k":"w"},"e1f1":{"r":"d5f4","p":["c2c3","b7b5","c4b3"],"k":"w"},"d1e2":{"r":"d5f4","p":["e2d2","b7b5","c4d5"],"k":"w"},"d1d2":{"r":"d5f4","p":["d3d4","b7b5","c4b3"],"k":"w"},"d1c1":{"r":"d5f4","p":["c1d2","b7b5","c4d5"],"k":"w"},"d1b1":{"r":"d5f4","p":["c2c3","b7b5","c4b3"],"k":"w"},"a1c1":{"r":"d5f4","p":["c2c3","b7b5","c4b3"],"k":"w"},"a1b1":{"r":"d5f4","p":["c2c3","b7b5","c4b3"],"k":"w"},"e1g1":{"r":"d5f4","p":["f3g5","f4h3","g5h3"],"k":"w"},"h3h4":{"r":"d5f4","p":["a2a4","c7c6","d3d4"],"k":"w"},"d3d4":{"r":"c5b4","p":["c2c3","d5c3","d1b3"],"k":"w"},"c2c3":{"r":"d5f4","p":["d3d4","c5b6","d4e5"],"k":"w"},"b2b3":{"r":"c5b4","p":["e1f1","d5f4","c2c3"],"k":"w"},"a2a3":{"r":"d5f4","p":["d1d2","c8h3","f3h4"],"k":"w"},"b2b4":{"r":"c5b4","p":["e1f1","d5f4","a1b1"],"k":"w"},"a2a4":{"r":"d5f4","p":["c2c3","c7c6","d3d4"],"k":"w"}}}},{"id":"Q6","part":3,"kind":"quiz","title":"Где спрятать короля?","fen":"r1bq1rk1/ppp2pp1/2np1n1p/2b1p3/2B1P1P1/2NP1N1P/PPP2P2/R1BQK2R w KQ - 1 8","lastMove":["e8","g8"],"question":"Наши пешки g и h ушли вперёд. Куда лучше спрятать белого короля?","options":[{"t":"Сделать короткую рокировку, она быстрее","why":"Справа у нас больше нет пешечного «забора». Короткая рокировка поставит короля туда, где открываются линии."},{"t":"Сделать длинную рокировку или оставить короля в центре","ok":true,"why":"Да. Пешки g и h атакуют, значит, король держится от них подальше."},{"t":"Неважно, король в безопасности везде","why":"Королю не всё равно. Проверь, где у тебя остались целые пешки."}]},{"id":"D1","part":4,"kind":"board","mate":true,"title":"Мат в 2: кто защищает h7?","prompt":"Ферзь h4 и слон d3 целятся в h7. Но Фxh7+ пока не мат. Найди защитника.","fen":"r2q1rk1/pp2bppp/2p2n2/4p3/4N2Q/3B4/PPP2PPP/R4RK1 w - - 0 1","defender":{"sq":"f6","ask":"Нажми на чёрную фигуру, которая защищает h7.","ok":"Да, конь f6. Убери его, и лучше с шахом!","bad":"Эта фигура не защищает h7. Кто из чёрных может пойти на h7?","hint":"Посмотри на коней."},"line":["e4f6","g7f6","h4h7"],"hints":["Конь e4 бьёт защитника, да ещё с шахом.","Поле h7 больше никто не защищает."],"explain":"Конь f6 был единственным защитником h7. Кxf6+ убрал его с шахом, и Фxh7 — мат.","moves":"Мат в 2","wrong":{"0":{"h4h7":{"r":"f6h7","p":["f1e1","d8b6","b2b3"],"k":"l","x":"ферзя за пешку"},"h4h6":{"r":"g7h6","p":["e4f6","e7f6","a1e1"],"k":"l","x":"ферзя"},"h4f6":{"r":"e7f6","p":["e4f6","d8f6","a1e1"],"k":"l","x":"ферзя за слона"},"h4h5":{"r":"f6h5","p":["f1d1","d8d5","e4c3"],"k":"l","x":"ферзя"},"h4g5":{"r":"f6e4","p":["g5e5","e4g5","f1d1"],"k":"l","x":"коня за пешку"},"h4g4":{"r":"f6g4","p":["a1d1","d8b6","b2b3"],"k":"l","x":"ферзя"},"h4f4":{"r":"e5f4","p":["f1e1","d8d4","e4f6"],"k":"l","x":"ферзя"},"h4h3":{"r":"g7g6","p":["e4f6","e7f6","h3e3"],"k":"b"},"h4g3":{"r":"f6e4","p":["d3e4","d8c7","c2c3"],"k":"b"},"e4d6":{"r":"e7d6","p":["c2c3","d8b6","a1b1"],"k":"l","x":"коня"},"e4g5":{"r":"h7h6","p":["g5f3","d8c7","f1e1"],"k":"b"},"e4c5":{"r":"e7c5","p":["d3c4","d8b6","b2b4"],"k":"l","x":"коня"},"e4g3":{"r":"g7g6","p":["d3c4","d8b6","a1d1"],"k":"b"},"e4c3":{"r":"g7g6","p":["h4h3","d8b6","a1b1"],"k":"b"},"e4d2":{"r":"g7g6","p":["d2f3","f6d5","h4e4"],"k":"b"},"d3a6":{"r":"b7a6","p":["e4g3","d8d7","h4g5"],"k":"l","x":"слона"},"d3b5":{"r":"c6b5","p":["e4f6","e7f6","h4b4"],"k":"l","x":"слона"},"d3c4":{"r":"d8b6","p":["e4g3","g7g6","a1d1"],"k":"b"},"d3e2":{"r":"f6d5","p":["h4h3","f7f5","e4c3"],"k":"b"},"g1h1":{"r":"f6d5","p":["h4h3","f7f5","e4c3"],"k":"b"},"f1e1":{"r":"f6d5","p":["h4h3","f7f5","e4c3"],"k":"b"},"f1d1":{"r":"f6d5","p":["h4h3","d8c8","h3c8"],"k":"b"},"f1c1":{"r":"f6d5","p":["h4g3","f7f5","e4c3"],"k":"b"},"f1b1":{"r":"f6d5","p":["h4g3","f7f5","e4c3"],"k":"b"},"a1e1":{"r":"f6d5","p":["h4g3","f7f5","e4c3"],"k":"b"},"a1d1":{"r":"f6d5","p":["h4h3","d8c8","h3c8"],"k":"b"},"a1c1":{"r":"f6d5","p":["h4h3","f7f5","f1d1"],"k":"b"},"a1b1":{"r":"f6d5","p":["h4g3","f7f5","e4c3"],"k":"b"},"h2h3":{"r":"f6d5","p":["h4g3","f7f5","e4d2"],"k":"b"},"g2g3":{"r":"f6d5","p":["h4h3","f7f5","e4c3"],"k":"b"},"f2f3":{"r":"f6d5","p":["h4e1","d8b6","e1f2"],"k":"b"},"c2c3":{"r":"d8d3","p":["e4f6","e7f6","h4a4"],"k":"l","x":"слона"},"b2b3":{"r":"f6d5","p":["h4h3","f7f5","a1d1"],"k":"b"},"a2a3":{"r":"f6d5","p":["h4g3","f7f5","e4c3"],"k":"b"},"g2g4":{"r":"f6e4","p":["h4h3","e4g5","h3g2"],"k":"l","x":"коня"},"f2f4":{"r":"f6e4","p":["h4h3","e5f4","h3f5"],"k":"l","x":"коня"},"c2c4":{"r":"d8d3","p":["a1e1","f6d5","h4h5"],"k":"l","x":"слона"},"b2b4":{"r":"f6d5","p":["h4g3","f7f5","e4c5"],"k":"b"},"a2a4":{"r":"f6d5","p":["h4h3","f7f5","e4c3"],"k":"b"}},"2":{"h4f6":{"r":"e7f6","p":["a1e1","d8a5","a2a3"],"k":"l","x":"ферзя за пешку"},"h4g5":{"r":"f6g5","p":["b2b3","f7f5","d3c4"],"k":"l","x":"ферзя"},"h4f4":{"r":"e5f4","p":["a1e1","e7d6","b2b3"],"k":"l","x":"ферзя"},"h4d4":{"r":"d8d4","p":["d3f5","d4f4","f5d3"],"k":"l","x":"ферзя"},"h4c4":{"r":"d8d4","p":["c4d4","e5d4","a1e1"],"k":"e"},"h4b4":{"r":"e7b4","p":["a1d1","d8c8","c2c3"],"k":"l","x":"ферзя"},"h4a4":{"r":"d8d4","p":["a4d4","e5d4","a1e1"],"k":"e"},"d3h7":{"r":"g8g7","p":["a1d1","f8h8","d1d8"],"k":"w"},"d3g6":{"r":"h7g6","p":["f1d1","d8c7","d1d3"],"k":"l","x":"слона"},"d3a6":{"r":"b7a6","p":["a1d1","d8c8","f2f4"],"k":"l","x":"слона"},"d3b5":{"r":"c6b5","p":["a2a4","d8b6","f1d1"],"k":"l","x":"слона"},"d3e4":{"r":"f6f5","p":["h4g3","e7g5","e4f5"],"k":"e"},"d3c4":{"r":"d8d4","p":["h4d4","e5d4","f1e1"],"k":"e"},"d3e2":{"r":"d8d6","p":["e2d3","f6f5","h4g3"],"k":"e"},"g1h1":{"r":"f6f5","p":["h4g3","e7g5","h2h4"],"k":"w"},"f1e1":{"r":"f6f5","p":["h4g3","e7g5","h2h4"],"k":"w"},"f1d1":{"r":"f6f5","p":["h4g3","e7g5","h2h4"],"k":"w"},"f1c1":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"f1b1":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"a1e1":{"r":"f6f5","p":["h4g3","e7g5","h2h4"],"k":"w"},"a1d1":{"r":"f6f5","p":["h4g3","e7g5","h2h4"],"k":"w"},"a1c1":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"a1b1":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"h2h3":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"g2g3":{"r":"f6f5","p":["h4h5","e5e4","d3c4"],"k":"b"},"f2f3":{"r":"d8d4","p":["h4d4","e5d4","f1e1"],"k":"e"},"c2c3":{"r":"d8d3","p":["h4g4","d3g6","g4d7"],"k":"l","x":"слона"},"b2b3":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"a2a3":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"g2g4":{"r":"e5e4","p":["a1d1","f6f5","h4h5"],"k":"e"},"f2f4":{"r":"e5e4","p":["d3e4","d8d4","g1h1"],"k":"e"},"c2c4":{"r":"d8d3","p":["a1e1","g8h8","e1e3"],"k":"l","x":"слона"},"b2b4":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"},"a2a4":{"r":"f6f5","p":["h4g3","g8h8","g3e5"],"k":"w"}}},"alts":{},"finalMsg":"Это не мат. Найди ход, после которого королю некуда деться."},{"id":"D4","part":4,"kind":"board","mate":true,"title":"Мат в 2: поле g7","prompt":"Хочется сыграть Фg7, но поле g7 защищено. Кто его защищает?","fen":"r4rk1/pp3p1p/2pp1Qpb/4p3/q3P3/8/PPP2PPP/R1B4K w - - 0 1","defender":{"sq":"h6","ask":"Нажми на чёрную фигуру, которая охраняет поле g7.","ok":"Да, слон h6. Сможешь его убрать?","bad":"Нет. Ищи фигуру, которая бьёт по полю g7.","hint":"Это фигура, которая ходит по диагоналям."},"line":["c1h6","a4e4","f6g7"],"hints":["Наш слон c1 смотрит прямо на h6.","Теперь поле g7 защищает наш слон."],"explain":"Слон h6 охранял g7. После Сxh6 поле g7 защищает уже наш слон, и Фg7 — мат. Чёрный ферзь съел пешку e4, но это уже не помогло.","moves":"Мат в 2","wrong":{"0":{"f6h8":{"r":"g8h8","p":["c1h6","f8c8","a1c1"],"k":"l","x":"ферзя за слона"},"f6d8":{"r":"f8d8","p":["c1h6","a4e4","a1c1"],"k":"l","x":"ферзя и пешку за слона"},"f6g7":{"r":"h6g7","p":["f2f3","a4c2","h2h4"],"k":"l","x":"ферзя"},"f6f7":{"r":"f8f7","p":["c1h6","f7f2","a1g1"],"k":"l","x":"ферзя за слона"},"f6e7":{"r":"h6g7","p":["f2f3","a4c2","h1g1"],"k":"b"},"f6g6":{"r":"f7g6","p":["c1h6","f8f2","a1g1"],"k":"l","x":"ферзя за слона"},"f6e6":{"r":"f7e6","p":["c1h6","f8f2","a1g1"],"k":"l","x":"ферзя и пешку за слона"},"f6d6":{"r":"a8d8","p":["d6d8","f8d8","c1h6"],"k":"l","x":"ферзя за ладью и слона"},"f6g5":{"r":"h6g5","p":["c1g5","a4c2","a1f1"],"k":"l","x":"ферзя и пешку за слона"},"f6f5":{"r":"g6f5","p":["c1h6","f8c8","e4f5"],"k":"l","x":"ферзя за слона"},"f6e5":{"r":"d6e5","p":["c1h6","f8d8","a1c1"],"k":"l","x":"ферзя за слона и пешку"},"f6h4":{"r":"h6g7","p":["f2f3","a4c2","h4e1"],"k":"b"},"f6f4":{"r":"e5f4","p":["c1d2","a4c2","d2a5"],"k":"l","x":"ферзя"},"f6f3":{"r":"h6c1","p":["a1c1","a4d4","c1e1"],"k":"b"},"h1g1":{"r":"h6g7","p":["f6h4","f7f5","f2f3"],"k":"b"},"c1g5":{"r":"h6g5","p":["f6g5","a4c2","f2f3"],"k":"l","x":"пешку"},"c1f4":{"r":"e5f4","p":["f6c3","h6g7","c3b3"],"k":"l","x":"слона"},"c1e3":{"r":"h6e3","p":["f2e3","a4c2","b2b3"],"k":"l","x":"пешку"},"c1d2":{"r":"h6d2","p":["f6d6","a4c2","d6a3"],"k":"l","x":"слона"},"a1b1":{"r":"a4c2","p":["f6f3","c2b1","f3d1"],"k":"l","x":"пешку"},"h2h3":{"r":"h6g7","p":["f6g5","a4e4","g5d2"],"k":"b"},"g2g3":{"r":"a4e4","p":["h1g1","e4e1","g1g2"],"k":"l","x":"пешку"},"f2f3":{"r":"h6g7","p":["f6g5","f7f5","e4f5"],"k":"b"},"c2c3":{"r":"a4d1","k":"m","n":1},"b2b3":{"r":"a4d4","p":["c1b2","d4b2","a1f1"],"k":"b"},"a2a3":{"r":"h6g7","p":["f6f3","a4c2","c1e3"],"k":"b"},"h2h4":{"r":"h6g7","p":["f6f3","a4c2","h1g1"],"k":"b"},"g2g4":{"r":"a4e4","p":["h1g1","e4g4","g1f1"],"k":"l","x":"две пешки"},"f2f4":{"r":"a4e4","p":["f6h4","e4c2","c1e3"],"k":"l","x":"пешку"},"c2c4":{"r":"a4d1","k":"m","n":1},"b2b4":{"r":"h6g7","p":["f6e7","a4b4","c1e3"],"k":"b"}},"2":{"h6f8":{"r":"a8f8","p":["f6d6","e4c2","h1g1"],"k":"b"},"h6g7":{"r":"e4f4","p":["f6f4","e5f4","g7f8"],"k":"b"},"h6g5":{"r":"e4f5","p":["h2h4","f5f6","g5f6"],"k":"b"},"h6f4":{"r":"e4f4","p":["f6f4","e5f4","h1g1"],"k":"l","x":"слона"},"h6e3":{"r":"e4f5","p":["f6d6","f8d8","d6c5"],"k":"b"},"h6d2":{"r":"e4f5","p":["f6f5","g6f5","a2a4"],"k":"b"},"h6c1":{"r":"e4e1","k":"m","n":1},"f6h8":{"r":"g8h8","p":["h6f8","a8f8","f2f4"],"k":"l","x":"ферзя и слона за ладью"},"f6d8":{"r":"f8d8","p":["a1c1","e4d4","b2b3"],"k":"l","x":"ферзя"},"f6f7":{"r":"f8f7","p":["f2f3","e4c2","b2b4"],"k":"l","x":"ферзя за пешку"},"f6e7":{"r":"e4f5","p":["h6f8","a8f8","h1g1"],"k":"b"},"f6g6":{"r":"f7g6","p":["h6f8","a8f8","f2f3"],"k":"l","x":"ферзя и слона за ладью и пешку"},"f6e6":{"r":"f7e6","p":["h6f8","a8f8","f2f3"],"k":"l","x":"ферзя и слона за ладью"},"f6d6":{"r":"f7f6","p":["h6f8","a8f8","d6d2"],"k":"b"},"f6g5":{"r":"f7f6","p":["g5d2","f8d8","a1e1"],"k":"b"},"f6f5":{"r":"e4f5","p":["h6f8","a8f8","a1f1"],"k":"l","x":"ферзя и слона за ладью"},"f6e5":{"r":"e4e5","p":["h6f8","e5b2","a1f1"],"k":"l","x":"ферзя за ладью"},"f6h4":{"r":"e4h4","p":["h6f8","a8f8","h1g1"],"k":"l","x":"ферзя и слона за ладью"},"f6f4":{"r":"e5f4","p":["h6f8","a8f8","h1g1"],"k":"l","x":"ферзя и слона за ладью"},"f6f3":{"r":"e4f3","p":["g2f3","f8e8","a2a4"],"k":"b"},"a1e1":{"r":"e4e1","k":"m","n":1}}},"alts":{},"finalMsg":"Это не мат. Найди ход, после которого королю некуда деться."},{"id":"D2","part":4,"kind":"board","mate":true,"title":"Мат в 2: последняя горизонталь","prompt":"Ладья e1 хочет на e8, но там стоит чёрная ладья. Кто сторожит последнюю горизонталь?","fen":"4r1k1/p2q1ppp/1p6/2p5/8/1P6/P1P1QPPP/4R1K1 w - - 0 1","defender":{"sq":"e8","ask":"Нажми на главного сторожа 8-й горизонтали.","ok":"Да, ладья e8. Чем её убрать, да ещё с шахом?","bad":"Ищи на 8-й горизонтали.","soft":{"d7":"Ферзь d7 тоже помогает, но главный сторож стоит прямо на линии e."},"hint":"Сторож стоит на линии e."},"line":["e2e8","d7e8","e1e8"],"hints":["Ферзя не жалко, если за ним мат.","Ладья e1 добивает на e8."],"explain":"Фxe8+! Отдаём ферзя, чтобы убрать сторожа. Чёрные бьют Фxe8, и ладья e1 бьёт на e8 — мат: королю мешают его же пешки.","moves":"Мат в 2","wrong":{"0":{"e2e7":{"r":"e8e7","p":["e1f1","d7d2","a2a3"],"k":"l","x":"ферзя"},"e2e6":{"r":"e8e6","p":["e1f1","d7d2","g2g4"],"k":"l","x":"ферзя"},"e2a6":{"r":"e8e1","p":["a6f1","e1f1","g1f1"],"k":"m","n":3},"e2h5":{"r":"e8e1","k":"m","n":1},"e2e5":{"r":"e8e5","p":["e1f1","d7d2","a2a3"],"k":"l","x":"ферзя"},"e2b5":{"r":"e8e1","p":["b5f1","e1f1","g1f1"],"k":"m","n":3},"e2g4":{"r":"e8e1","k":"m","n":1},"e2e4":{"r":"e8e4","p":["e1f1","d7d2","a2a3"],"k":"l","x":"ферзя"},"e2c4":{"r":"e8e1","p":["c4f1","e1f1","g1f1"],"k":"m","n":3},"e2f3":{"r":"e8e1","k":"m","n":1},"e2e3":{"r":"e8e3","p":["f2e3","d7d2","g1f1"],"k":"l","x":"ферзя за ладью"},"e2d3":{"r":"e8e1","p":["d3f1","e1f1","g1f1"],"k":"m","n":3},"e2d2":{"r":"e8e1","p":["d2e1","g8f8","g2g3"],"k":"e"},"e2f1":{"r":"e8e1","p":["f1e1","g8f8","g2g3"],"k":"e"},"e2d1":{"r":"e8e7","p":["g1f1","h7h6","d1d7"],"k":"e"},"g1h1":{"r":"e8e2","p":["e1g1","e2c2","h2h3"],"k":"l","x":"ферзя"},"g1f1":{"r":"e8e2","p":["e1e2","g7g6","f2f3"],"k":"l","x":"ферзя за ладью"},"e1f1":{"r":"e8e2","p":["a2a3","e2c2","b3b4"],"k":"l","x":"ферзя"},"e1d1":{"r":"e8e2","p":["d1f1","e2c2","a2a3"],"k":"l","x":"ферзя"},"e1c1":{"r":"e8e2","p":["c1f1","e2c2","a2a3"],"k":"l","x":"ферзя"},"e1b1":{"r":"e8e2","p":["b1f1","e2c2","a2a3"],"k":"l","x":"ферзя"},"e1a1":{"r":"e8e2","p":["a1f1","e2c2","a2a3"],"k":"l","x":"ферзя"},"b3b4":{"r":"e8e2","p":["g1f1","e2e1","f1e1"],"k":"l","x":"ферзя"},"h2h3":{"r":"e8e2","p":["e1e2","d7d1","g1h2"],"k":"l","x":"ферзя за ладью"},"g2g3":{"r":"e8e2","p":["e1e2","d7d1","g1g2"],"k":"l","x":"ферзя за ладью"},"f2f3":{"r":"e8e2","p":["e1e2","g7g6","c2c4"],"k":"l","x":"ферзя за ладью"},"c2c3":{"r":"e8e2","p":["g1f1","e2e1","f1e1"],"k":"l","x":"ферзя"},"a2a3":{"r":"e8e2","p":["e1f1","e2c2","h2h4"],"k":"l","x":"ферзя"},"h2h4":{"r":"e8e2","p":["e1e2","d7d1","g1h2"],"k":"l","x":"ферзя за ладью"},"g2g4":{"r":"e8e2","p":["e1e2","d7d1","g1g2"],"k":"l","x":"ферзя за ладью"},"f2f4":{"r":"e8e2","p":["e1e2","d7d4","g1f1"],"k":"l","x":"ферзя за ладью"},"c2c4":{"r":"e8e2","p":["e1f1","e2a2","h2h3"],"k":"l","x":"ферзя"},"a2a4":{"r":"e8e2","p":["e1a1","d7d4","a1f1"],"k":"l","x":"ферзя"}},"2":{"g1h1":{"r":"e8e1","k":"m","n":1},"g1f1":{"r":"e8d7","p":["f2f3","g7g6","e1e2"],"k":"b"},"e1e7":{"r":"e8e7","p":["g2g3","e7e1","g1g2"],"k":"l","x":"ладью"},"e1e6":{"r":"e8e6","p":["g2g3","e6e1","g1g2"],"k":"l","x":"ладью"},"e1e5":{"r":"e8e5","p":["g1f1","e5e4","f2f3"],"k":"l","x":"ладью"},"e1e4":{"r":"e8e4","p":["g2g3","e4c2","a2a4"],"k":"l","x":"ладью"},"e1e3":{"r":"e8d8","p":["e3d3","d8f6","g2g4"],"k":"b"},"e1e2":{"r":"e8e2","p":["g2g3","e2c2","a2a4"],"k":"l","x":"ладью"},"e1f1":{"r":"e8e2","p":["c2c3","e2a2","b3b4"],"k":"b"},"e1d1":{"r":"g7g6","p":["g2g3","e8e5","d1f1"],"k":"b"},"e1c1":{"r":"e8e2","p":["a2a3","e2d2","c1f1"],"k":"b"},"e1b1":{"r":"e8e2","p":["c2c3","e2a2","b1d1"],"k":"b"},"e1a1":{"r":"e8e5","p":["a1d1","g7g6","g2g3"],"k":"b"},"b3b4":{"r":"e8e1","k":"m","n":1},"h2h3":{"r":"e8e1","p":["g1h2","e1f2","c2c3"],"k":"l","x":"ладью и пешку"},"g2g3":{"r":"e8e1","p":["g1g2","e1e4","g2g1"],"k":"l","x":"ладью"},"f2f3":{"r":"e8e1","k":"m","n":1},"c2c3":{"r":"e8e1","k":"m","n":1},"a2a3":{"r":"e8e1","k":"m","n":1},"h2h4":{"r":"e8e1","p":["g1h2","e1f2","a2a3"],"k":"l","x":"ладью и пешку"},"g2g4":{"r":"e8e1","p":["g1g2","e1e4","g2g3"],"k":"l","x":"ладью"},"f2f4":{"r":"e8e1","k":"m","n":1},"c2c4":{"r":"e8e1","k":"m","n":1},"a2a4":{"r":"e8e1","k":"m","n":1}}},"alts":{},"finalMsg":"Это не мат. Найди ход, после которого королю некуда деться."},{"id":"D3","part":4,"kind":"board","mate":true,"star":true,"title":"Мат в 3: задача со звёздочкой","prompt":"Слон b2 смотрит по большой диагонали на g7, ладья e3 готова перейти на линию g. Что мешает атаке?","fen":"r1q2rk1/pp1p1ppp/2p2n2/8/5Q2/1P2R3/PBP2PPP/6K1 w - - 0 1","defender":{"sq":"f6","ask":"Нажми на фигуру, которая мешает нашей атаке.","ok":"Верно, конь f6. Он загораживает диагональ слону и защищает короля. Убери его любой ценой!","bad":"Посмотри на диагональ b2–h8. Кто её перегородил?","hint":"Проведи линию от b2 до h8."},"line":["f4f6","g7f6","e3g3","g8h8","b2f6"],"hints":["Самая сильная фигура тоже может пожертвовать собой. Убери f6 ферзём.","Шах ладьёй по открытой линии g.","Слон b2 теперь видит всю диагональ."],"explain":"Фxf6!! gxf6 Лg3+ Крh8 Сxf6#. Конь f6 и защищал, и загораживал диагональ. Мы отдали ферзя, чтобы его убрать, и слон с ладьёй поставили мат вдвоём.","moves":"Мат в 3","wrong":{"0":{"f4b8":{"r":"c8b8","p":["b2f6","g7f6","g2g3"],"k":"l","x":"ферзя"},"f4c7":{"r":"c8c7","p":["g2g3","f8e8","b2f6"],"k":"l","x":"ферзя"},"f4h6":{"r":"f8e8","p":["h6g5","h7h6","g5g3"],"k":"b"},"f4d6":{"r":"f6d5","p":["e3g3","f7f6","a2a4"],"k":"b"},"f4g5":{"r":"h7h6","p":["g5h4","c8d8","b2f6"],"k":"b"},"f4f5":{"r":"f6d5","p":["e3g3","f7f6","f5g4"],"k":"b"},"f4e5":{"r":"f8e8","p":["e5g5","e8e3","g5e3"],"k":"b"},"f4h4":{"r":"f8e8","p":["b2f6","e8e3","f2e3"],"k":"b"},"f4g4":{"r":"f6g4","p":["b2g7","g4e3","g7f8"],"k":"l","x":"ферзя за пешку"},"f4e4":{"r":"f6e4","p":["e3e4","f8e8","e4e3"],"k":"l","x":"ферзя за коня"},"f4d4":{"r":"f8e8","p":["h2h3","e8e3","d4e3"],"k":"b"},"f4c4":{"r":"d7d5","p":["c4h4","c8g4","h4g4"],"k":"b"},"f4b4":{"r":"f6d5","p":["e3g3","f7f6","b4g4"],"k":"b"},"f4a4":{"r":"f6d5","p":["e3g3","f7f6","a4g4"],"k":"b"},"f4g3":{"r":"c8d8","p":["h2h3","f8e8","b2e5"],"k":"b"},"f4f3":{"r":"f6d5","p":["e3e1","f7f6","c2c4"],"k":"b"},"e3e8":{"r":"c8e8","p":["f4d2","e8e6","h2h3"],"k":"l","x":"ладью"},"e3e7":{"r":"f8e8","p":["b2f6","g7f6","f4f6"],"k":"b"},"e3e6":{"r":"f7e6","p":["f4d6","f8f7","b2f6"],"k":"l","x":"ладью"},"e3e5":{"r":"f8e8","p":["g2g3","d7d5","f2f3"],"k":"b"},"e3e4":{"r":"f6e4","p":["f4e4","c8e8","e4e3"],"k":"l","x":"ладью за коня"},"e3h3":{"r":"f8e8","p":["f4d2","f6e4","d2f4"],"k":"b"},"e3g3":{"r":"f6h5","p":["f4e5","f7f6","e5h5"],"k":"b"},"e3f3":{"r":"f8e8","p":["g2g3","e8e6","f4d2"],"k":"b"},"e3d3":{"r":"f8e8","p":["g1f1","e8e6","f4d2"],"k":"b"},"e3c3":{"r":"f8e8","p":["f4c1","e8e6","c3g3"],"k":"b"},"e3e2":{"r":"f8e8","p":["g1f1","e8e2","f1e2"],"k":"b"},"e3e1":{"r":"f8e8","p":["e1d1","e8e4","f4f3"],"k":"b"},"b2f6":{"r":"c8d8","p":["f6d8","a8d8","f4c7"],"k":"s"},"b2e5":{"r":"f6d5","p":["e3g3","f7f6","f4g4"],"k":"b"},"b2d4":{"r":"f8e8","p":["d4f6","e8e3","f2e3"],"k":"b"},"b2c3":{"r":"f6d5","p":["e3g3","f7f6","f4g4"],"k":"b"},"b2a3":{"r":"f6d5","p":["f4f3","d5e3","a3f8"],"k":"b"},"b2c1":{"r":"f6d5","p":["f4d6","d5e3","c1e3"],"k":"b"},"b2a1":{"r":"f6d5","p":["f4g4","f7f6","e3g3"],"k":"b"},"g1h1":{"r":"f6d5","p":["f4g4","f7f6","e3g3"],"k":"b"},"g1f1":{"r":"f6d5","p":["f4d4","d5e3","d4e3"],"k":"b"},"b3b4":{"r":"f6d5","p":["f4d4","f7f6","e3e4"],"k":"b"},"h2h3":{"r":"f6d5","p":["f4g4","f7f6","e3g3"],"k":"b"},"g2g3":{"r":"f6d5","p":["f4g4","f7f6","e3d3"],"k":"b"},"f2f3":{"r":"f6d5","p":["f4d4","f7f6","e3e4"],"k":"b"},"c2c3":{"r":"f6d5","p":["f4d4","d5e3","f2e3"],"k":"b"},"a2a3":{"r":"f6d5","p":["f4g4","f7f6","e3d3"],"k":"b"},"h2h4":{"r":"f6d5","p":["f4g4","f7f6","e3g3"],"k":"b"},"g2g4":{"r":"f6d5","p":["f4d4","f7f6","e3e4"],"k":"b"},"c2c4":{"r":"c8d8","p":["b2f6","d8f6","f4f6"],"k":"b"},"a2a4":{"r":"f6d5","p":["f4g4","f7f6","e3g3"],"k":"b"}},"2":{"e3e8":{"r":"c8e8","p":["g2g3","e8e1","g1g2"],"k":"l","x":"ладью"},"e3e7":{"r":"f8e8","p":["e7e3","e8e3","f2e3"],"k":"b"},"e3e6":{"r":"f7e6","p":["b2a3","f8e8","a3d6"],"k":"l","x":"ладью"},"e3e5":{"r":"f6e5","p":["f2f4","c8c7","b2e5"],"k":"l","x":"ладью"},"e3e4":{"r":"f6f5","p":["e4e3","f5f4","e3f3"],"k":"b"},"e3h3":{"r":"f8e8","p":["g1f1","c8c7","h3g3"],"k":"b"},"e3f3":{"r":"f8e8","p":["g1f1","c8c7","b2f6"],"k":"b"},"e3d3":{"r":"f8e8","p":["b2c3","c8c7","d3g3"],"k":"b"},"e3c3":{"r":"f8e8","p":["c3g3","g8f8","g1f1"],"k":"b"},"e3e2":{"r":"f8e8","p":["e2e3","e8e3","f2e3"],"k":"b"},"e3e1":{"r":"f8e8","p":["e1f1","e8e2","b2f6"],"k":"b"},"b2f6":{"r":"f8e8","p":["e3g3","g8f8","g1f1"],"k":"b"},"b2e5":{"r":"f6e5","p":["g1f1","c8c7","e3g3"],"k":"l","x":"слона"},"b2d4":{"r":"c8d8","p":["e3g3","g8h8","h2h4"],"k":"b"},"b2c3":{"r":"f8e8","p":["e3g3","g8f8","h2h3"],"k":"b"},"b2a3":{"r":"d7d6","p":["h2h3","f8e8","e3g3"],"k":"b"},"b2c1":{"r":"f8e8","p":["e3g3","g8h8","c1e3"],"k":"b"},"b2a1":{"r":"f8e8","p":["a1d4","e8e3","f2e3"],"k":"b"},"g1h1":{"r":"f8e8","p":["e3g3","g8f8","h2h4"],"k":"b"},"g1f1":{"r":"f8e8","p":["e3g3","g8f8","b2f6"],"k":"b"},"b3b4":{"r":"f8e8","p":["e3g3","g8f8","h2h3"],"k":"b"},"h2h3":{"r":"f8e8","p":["e3g3","g8f8","b2f6"],"k":"b"},"g2g3":{"r":"f8e8","p":["e3f3","e8e1","g1g2"],"k":"b"},"f2f3":{"r":"c8c7","p":["e3d3","c7a5","h2h3"],"k":"b"},"c2c3":{"r":"f8e8","p":["b2c1","e8e3","c1e3"],"k":"b"},"a2a3":{"r":"f8e8","p":["e3g3","g8f8","h2h3"],"k":"b"},"h2h4":{"r":"f8e8","p":["e3g3","g8f8","b2f6"],"k":"b"},"g2g4":{"r":"f8e8","p":["e3f3","e8e1","g1g2"],"k":"b"},"f2f4":{"r":"c8d8","p":["b2d4","f8e8","e3g3"],"k":"b"},"c2c4":{"r":"f8e8","p":["e3g3","g8f8","b2c3"],"k":"b"},"a2a4":{"r":"f8e8","p":["e3g3","g8f8","b2a3"],"k":"b"}},"4":{"g3g8":{"r":"h8g8","p":["g1f1","c8c7","h2h3"],"k":"l","x":"ладью"},"g3g7":{"r":"h8g7","p":["h2h3","c8e8","b2d4"],"k":"l","x":"ладью"},"g3g6":{"r":"f7g6","p":["g2g4","c8e8","g4g5"],"k":"l","x":"ладью"},"g3g5":{"r":"c8d8","p":["g5f5","f8e8","h2h4"],"k":"b"},"g3g4":{"r":"c8d8","p":["g2g3","f8e8","g1f1"],"k":"b"},"g3h3":{"r":"c8d8","p":["h3f3","f8e8","b2c3"],"k":"b"},"g3f3":{"r":"f8e8","p":["b2f6","h8g8","f3g3"],"k":"b"},"g3e3":{"r":"c8d8","p":["e3f3","f8e8","b2c3"],"k":"b"},"g3d3":{"r":"c8d8","p":["g1f1","f8e8","a2a3"],"k":"b"},"g3c3":{"r":"f8e8","p":["g1f1","c8c7","c3f3"],"k":"b"},"b2e5":{"r":"f6e5","p":["g1f1","c8c7","g3d3"],"k":"l","x":"слона"},"b2d4":{"r":"c8d8","p":["c2c3","f8e8","h2h3"],"k":"b"},"b2c3":{"r":"c8d8","p":["g3f3","f8e8","h2h4"],"k":"b"},"b2a3":{"r":"f8e8","p":["a3b4","d7d5","h2h3"],"k":"b"},"b2c1":{"r":"f8e8","p":["c1e3","c8c7","h2h3"],"k":"b"},"b2a1":{"r":"c8d8","p":["a1d4","f8e8","h2h3"],"k":"b"},"g1h1":{"r":"c8d8","p":["h2h3","f8e8","g3g4"],"k":"b"},"g1f1":{"r":"h7h5","p":["g3g5","b7b6","c2c4"],"k":"b"},"b3b4":{"r":"c8d8","p":["g3f3","f8e8","b2c3"],"k":"b"},"h2h3":{"r":"h7h5","p":["b2f6","h8h7","f6c3"],"k":"b"},"f2f3":{"r":"c8d8","p":["g3g4","f8e8","g4f4"],"k":"b"},"c2c3":{"r":"f8e8","p":["h2h4","e8e2","b2a3"],"k":"b"},"a2a3":{"r":"c8d8","p":["c2c4","f8e8","b2c3"],"k":"b"},"h2h4":{"r":"h7h5","p":["b2f6","h8h7","f6e5"],"k":"b"},"f2f4":{"r":"c8d8","p":["h2h3","f8e8","b2d4"],"k":"b"},"c2c4":{"r":"c8d8","p":["g3f3","f8e8","b2c3"],"k":"b"},"a2a4":{"r":"c8d8","p":["g3f3","f8e8","g2g3"],"k":"b"}}},"alts":{},"finalMsg":"Это не мат. Найди ход, после которого королю некуда деться."}],"theory":null};
+/* ===================== Общие данные ===================== */
+const PAGE_SRC = '<!doctype html>\n' + document.documentElement.outerHTML;
+const TGCFG = (() => {
+  try { const c = JSON.parse(document.getElementById('tg-config').textContent || '{}'); return c && typeof c === 'object' ? c : {}; }
+  catch (e) { return {}; }
+})();
+const PARTS = HW.parts;
+const TASKS = HW.tasks;
+const STORE_KEY = 'hw-' + HW.id;
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const maxOf = t => t.kind === 'quiz' ? 2 : 3;
+function plural(n, a, b, c) { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; }
+const fmtMin = s => { const m = Math.round(s / 60); return m < 1 ? 'меньше минуты' : m + ' мин'; };
+const sideName = (c, cap) => (c === 'w' ? (cap ? 'Белые' : 'белые') : (cap ? 'Чёрные' : 'чёрные'));
+
+/* ===================== Состояние ===================== */
+function freshState(name) {
+  return { name: name || '', idx: 0, started: false, results: {}, startedAt: 0, finishedAt: 0, pending: {},
+    tg: { msg: 0, q: [], prog: '', attempt: 1, finalSent: false } };
+}
+const S = Object.assign(freshState(), load() || {});
+if (!S.tg) S.tg = freshState().tg;
+if (!S.pending) S.pending = {};
+let screen = 'intro';
+let R = null;
+
+function load() { try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) { /* без хранилища тоже работаем */ } }
+const doneCount = () => TASKS.filter(t => S.results[t.id]).length;
+const totals = () => {
+  let got = 0, max = 0;
+  for (const t of TASKS) { max += maxOf(t); if (S.results[t.id]) got += S.results[t.id].score; }
+  return { got, max };
+};
+
+/* ===================== Доска ===================== */
+function createBoard(host, orient) {
+  const shell = el('div', 'board-shell');
+  const board = el('div', 'board');
+  const squares = el('div', 'squares');
+  const pieces = el('div', 'pieces');
+  const arrows = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  arrows.setAttribute('class', 'arrows'); arrows.setAttribute('viewBox', '0 0 8 8');
+  const sqEls = [];
+  const flip = orient === 'b';
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const r = flip ? row : 7 - row, f = flip ? 7 - col : col, idx = r * 8 + f;
+      const s = el('div', 'sq ' + ((r + f) % 2 ? 'l' : 'd'));
+      if (row === 7) s.appendChild(el('span', 'co f', 'abcdefgh'[f]));
+      if (col === 0) s.appendChild(el('span', 'co r', String(r + 1)));
+      squares.appendChild(s); sqEls[idx] = s;
+    }
+  }
+  board.append(squares, pieces, arrows);
+  shell.appendChild(board);
+  host.appendChild(shell);
+  const api = { board, sqEls, pieceEls: new Map(), pieces, arrows, flip, onPointer: null, redraw: null };
+  api.xy = i => { const f = i % 8, r = i >> 3; return flip ? [7 - f, r] : [f, 7 - r]; };
+
+  let drag = null;
+  const sqFromPoint = (x, y) => {
+    const rc = board.getBoundingClientRect();
+    const col = Math.floor((x - rc.left) / rc.width * 8), row = Math.floor((y - rc.top) / rc.height * 8);
+    if (col < 0 || col > 7 || row < 0 || row > 7) return -1;
+    return flip ? row * 8 + (7 - col) : (7 - row) * 8 + col;
+  };
+  board.addEventListener('pointerdown', e => {
+    if (!api.onPointer) return;
+    const sq = sqFromPoint(e.clientX, e.clientY);
+    if (sq < 0) return;
+    const res = api.onPointer('down', sq);
+    if (res && res.drag) {
+      const pe = api.pieceEls.get(res.id);
+      if (pe) {
+        drag = { sq, id: res.id, pe, x0: e.clientX, y0: e.clientY, moved: false, pid: e.pointerId };
+        try { board.setPointerCapture(e.pointerId); } catch (_) { }
+      }
+    }
+    e.preventDefault();
+  });
+  board.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.pid) return;
+    const dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    if (!drag.moved && Math.hypot(dx, dy) < 5) return;
+    drag.moved = true;
+    const rc = board.getBoundingClientRect(), size = rc.width / 8;
+    drag.pe.classList.add('drag');
+    drag.pe.style.left = (e.clientX - rc.left - size / 2) + 'px';
+    drag.pe.style.top = (e.clientY - rc.top - size / 2) + 'px';
+  });
+  const end = e => {
+    if (!drag || e.pointerId !== drag.pid) return;
+    const d = drag; drag = null;
+    d.pe.classList.remove('drag');
+    if (d.moved) api.onPointer('drop', sqFromPoint(e.clientX, e.clientY), d.sq);
+    api.redraw && api.redraw();
+  };
+  board.addEventListener('pointerup', end);
+  board.addEventListener('pointercancel', () => { if (drag) { drag.pe.classList.remove('drag'); drag = null; api.redraw && api.redraw(); } });
+  return api;
+}
+
+function drawBoard(api, pos, o = {}) {
+  const seen = new Set();
+  pos.board.forEach((pc, i) => {
+    if (!pc) return;
+    seen.add(pc.id);
+    let pe = api.pieceEls.get(pc.id);
+    const src = PIECE_IMG[pc.c + pc.t];
+    if (!pe) {
+      pe = el('div', 'pc'); const img = el('img'); img.alt = ''; img.draggable = false; pe.appendChild(img);
+      api.pieces.appendChild(pe); api.pieceEls.set(pc.id, pe);
+    }
+    const img = pe.firstChild; if (img.getAttribute('src') !== src) img.src = src;
+    const [x, y] = api.xy(i);
+    pe.style.left = (x * 12.5) + '%'; pe.style.top = (y * 12.5) + '%';
+  });
+  for (const [id, pe] of api.pieceEls) if (!seen.has(id)) { pe.remove(); api.pieceEls.delete(id); }
+
+  const ck = Chess.inCheck(pos, pos.turn) ? Chess.kingSq(pos, pos.turn) : -1;
+  api.sqEls.forEach((s, i) => {
+    s.classList.toggle('last', !!o.last && (o.last[0] === i || o.last[1] === i));
+    s.classList.toggle('sel', o.sel === i);
+    s.classList.toggle('check', ck === i);
+    s.classList.toggle('hint', o.hint === i);
+    s.classList.toggle('pick', !!o.pick);
+    s.classList.remove('flash-ok', 'flash-bad');
+    if (o.flash && o.flash[i]) s.classList.add('flash-' + o.flash[i]);
+    const old = s.querySelector('.tgt'); if (old) old.remove();
+    if (o.targets && o.targets.has(i)) s.appendChild(el('span', 'tgt' + (pos.board[i] ? ' cap' : '')));
+  });
+  api.board.classList.toggle('idle', !o.interactive);
+
+  const svg = api.arrows; svg.innerHTML = '';
+  if (o.arrows && o.arrows.length) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const defs = document.createElementNS(ns, 'defs');
+    defs.innerHTML = '<marker id="ah-b" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--pen)"/></marker>' +
+      '<marker id="ah-r" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--red)"/></marker>';
+    svg.appendChild(defs);
+    for (const ar of o.arrows) {
+      const [a, b, red] = ar;
+      const ia = typeof a === 'number' ? a : Chess.sqIdx(a), ib = typeof b === 'number' ? b : Chess.sqIdx(b);
+      const [xa, ya] = api.xy(ia), [xb, yb] = api.xy(ib);
+      const x1 = xa + .5, y1 = ya + .5, x2 = xb + .5, y2 = yb + .5;
+      const len = Math.hypot(x2 - x1, y2 - y1), k = (len - .32) / len;
+      const ln = document.createElementNS(ns, 'line');
+      ln.setAttribute('x1', x1); ln.setAttribute('y1', y1);
+      ln.setAttribute('x2', x1 + (x2 - x1) * k); ln.setAttribute('y2', y1 + (y2 - y1) * k);
+      ln.setAttribute('stroke', red ? 'var(--red)' : 'var(--pen)'); ln.setAttribute('stroke-width', '.16');
+      ln.setAttribute('stroke-linecap', 'round'); ln.setAttribute('opacity', '.8');
+      ln.setAttribute('marker-end', red ? 'url(#ah-r)' : 'url(#ah-b)');
+      svg.appendChild(ln);
+    }
+  }
+}
+
+/* ===================== Иконки ===================== */
+const ICON_TAP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M12 10.5V9a1.5 1.5 0 0 1 3 0v2"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.6 14.6a1.5 1.5 0 0 1 2.4-1.8L9 15.5"/></svg>';
+const ICON_BULB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
+const ICON_EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const ICON_UNDO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
+const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+/* ===================== Экраны ===================== */
+function setScreen(name) {
+  screen = name;
+  $('#sheet').hidden = !(name === 'task' || name === 'results');
+  $('#who').textContent = S.name || '';
+  render();
+  window.scrollTo(0, 0);
+}
+
+function render() {
+  const v = $('#view'); v.innerHTML = '';
+  renderSheet();
+  if (screen === 'intro') renderIntro(v);
+  else if (screen === 'task') renderTask(v);
+  else if (screen === 'results') renderResults(v);
+  else if (screen === 'coach') renderCoach(v);
+}
+
+function statusOf(t) {
+  const r = S.results[t.id];
+  if (!r) return '';
+  const m = maxOf(t);
+  return r.score === m ? 's-full' : r.score > 0 ? 's-part' : 's-zero';
+}
+
+function renderSheet() {
+  const sh = $('#sheet'); sh.innerHTML = '';
+  const maxCompletedIdx = TASKS.reduce((max, t, i) => S.results[t.id] ? i : max, 0);
+  for (const p of PARTS) {
+    const g = el('div', 'part-group');
+    g.appendChild(el('span', 'lbl', esc(p.n + '. ' + p.name)));
+    const cells = el('div', 'cells');
+    TASKS.forEach((t, i) => {
+      if (t.part !== p.n) return;
+      const st = statusOf(t);
+      const isCurrent = (screen === 'task' && S.idx === i);
+      const isUnlocked = i <= maxCompletedIdx + 1 || !!S.results[t.id];
+      const c = el('button', 'cell ' + st + (isCurrent ? ' cur' : ''));
+      c.type = 'button';
+      c.innerHTML = (i + 1) + (st === 's-full' ? '<span class="mk">✓</span>' : st === 's-part' ? '<span class="mk">~</span>' : st === 's-zero' ? '<span class="mk">×</span>' : '');
+      c.title = t.title;
+      if (!isUnlocked) {
+        c.disabled = true;
+        c.title = 'Сначала реши предыдущие задачи';
+      } else {
+        c.addEventListener('click', () => { leaveTask(); S.idx = i; save(); setScreen('task'); });
+      }
+      cells.appendChild(c);
+    });
+    g.appendChild(cells); sh.appendChild(g);
+  }
+  const { got, max } = totals();
+  sh.appendChild(el('div', 'sheet-total', 'Баллы<b>' + got + ' / ' + max + '</b>'));
+}
+
+/* ---------- вводный экран ---------- */
+function renderIntro(v) {
+  if (HW.theory) renderTheory(v);
+  const wrap = el('div', 'intro');
+  const left = el('section', 'card');
+  const counts = PARTS.map(p => TASKS.filter(t => t.part === p.n).length);
+  left.innerHTML = `
+    <h2>Что в домашке</h2>
+    <p class="muted">${esc(HW.planText)}</p>
+    <ol class="plan">${PARTS.map((p, i) => `
+      <li><span class="n">${p.n}</span><span class="t">${esc(p.name)}<span class="d">${esc(p.desc)}</span></span><span class="c">${counts[i]} ${plural(counts[i], 'задача', 'задачи', 'задач')}</span></li>`).join('')}
+    </ol>`;
+  const right = el('section', 'card');
+  const has = doneCount();
+  right.innerHTML = `
+    <h2>Как решать</h2>
+    <div class="how">
+      <div>${ICON_TAP}<span>Нажми на фигуру, потом на поле. Или перетащи фигуру пальцем.</span></div>
+      <div>${ICON_EYE}<span>Если ход неверный, компьютер покажет, как ответит соперник, и объяснит, что не так. Потом верни ход и попробуй ещё.</span></div>
+      <div>${ICON_BULB}<span>Есть подсказка, но сначала попробуй решить без неё.</span></div>
+    </div>
+    <div class="field">
+      <label for="student-name">Как тебя зовут?</label>
+      <input id="student-name" type="text" autocomplete="given-name" maxlength="40" placeholder="Имя и фамилия" value="${esc(S.name)}">
+    </div>
+    <div class="row">
+      ${has ? `<button class="btn primary" id="go" type="button">Продолжить (${has} из ${TASKS.length})</button>
+               <button class="btn" id="restart" type="button">Начать заново</button>`
+            : `<button class="btn primary" id="go" type="button">Начать</button>`}
+    </div>
+    <p class="small muted" style="margin-top:12px">${esc(HW.timeText)} Можно прерваться: прогресс сохранится в этом браузере.</p>`;
+  wrap.append(left, right); v.appendChild(wrap);
+
+  const name = $('#student-name');
+  name.addEventListener('input', () => { S.name = name.value.trim(); save(); $('#who').textContent = S.name; });
+  $('#go').addEventListener('click', () => {
+    if (!S.name) { name.focus(); name.placeholder = 'Напиши имя, чтобы тренер знал, чья работа'; return; }
+    if (!S.started) { S.started = true; S.startedAt = Date.now(); save(); REP.start(); }
+    const firstOpen = TASKS.findIndex(t => !S.results[t.id]);
+    S.idx = firstOpen >= 0 ? firstOpen : S.idx; save();
+    setScreen(firstOpen >= 0 ? 'task' : 'results');
+  });
+  const rs = $('#restart');
+  if (rs) armTwoStep(rs, 'Точно стереть всё? Нажми ещё раз', () => {
+    const attempt = (S.tg && S.tg.attempt || 1) + 1;
+    const fresh = freshState(S.name);
+    fresh.tg.attempt = attempt;
+    for (const k of Object.keys(S)) delete S[k];
+    Object.assign(S, fresh); save(); render();
+  });
+}
+
+function armTwoStep(btn, confirmText, action) {
+  const orig = btn.innerHTML; let armed = false, timer;
+  btn.addEventListener('click', () => {
+    if (!armed) { armed = true; btn.textContent = confirmText; timer = setTimeout(() => { armed = false; btn.innerHTML = orig; }, 4000); return; }
+    clearTimeout(timer); action();
+  });
+}
+
+/* ---------- теория с примером ---------- */
+function renderTheory(v) {
+  const th = HW.theory;
+  const sec = el('section', 'card theory');
+  const txt = el('div', 'txt', th.html);
+  const demo = el('div', 'demo');
+  sec.append(txt, demo); v.appendChild(sec);
+  if (!th.demo) return;
+  const d = th.demo;
+  const api = createBoard(demo, d.orient || 'w');
+  const cap = el('div', 'cap', d.intro);
+  const btns = el('div', 'row');
+  demo.append(cap, btns);
+  let pos, last = null, timers = [], arrows = null;
+  const draw = () => drawBoard(api, pos, { last, arrows });
+  const clear = () => { timers.forEach(clearTimeout); timers = []; };
+  const reset = () => {
+    clear(); pos = Chess.parse(d.fen); last = null; arrows = null;
+    const m = Chess.findUci(pos, d.pre);
+    pos = Chess.make(pos, m); last = [m.from, m.to]; arrows = d.preArrows || null; draw();
+  };
+  const play = (key) => {
+    const ln = d.lines[key];
+    reset();
+    cap.className = 'cap'; cap.innerHTML = ln.steps[0].cap;
+    ln.steps.forEach((st, k) => {
+      timers.push(setTimeout(() => {
+        if (st.move) { const m = Chess.findUci(pos, st.move); pos = Chess.make(pos, m); last = [m.from, m.to]; }
+        arrows = st.arrows || null;
+        draw();
+        cap.className = 'cap' + (st.tone ? ' ' + st.tone : ''); cap.innerHTML = st.cap;
+      }, 300 + k * (d.speed || 1700)));
+    });
+  };
+  Object.keys(d.lines).forEach((key, i) => {
+    const b = el('button', 'btn' + (i === 1 ? ' primary' : ''), esc(d.lines[key].label)); b.type = 'button';
+    b.addEventListener('click', () => play(key));
+    btns.appendChild(b);
+  });
+  const r = el('button', 'btn ghost', ICON_UNDO + 'Сначала'); r.type = 'button';
+  r.addEventListener('click', () => { reset(); cap.className = 'cap'; cap.innerHTML = d.intro; });
+  btns.appendChild(r);
+  reset();
+}
+
+/* ===================== Задание ===================== */
+function newRuntime(t, practice) {
+  const r = {
+    t, step: 0, practice: !!practice,
+    phase: t.kind === 'quiz' ? 'quiz' : (t.defender ? 'defender' : 'move'),
+    mistakes: 0, hints: 0, hintSteps: new Set(), shown: false, wrong: [], attempts: 0, triedOpts: new Set(),
+    history: [], last: null, sel: -1, hint: -1, flash: null, lock: false, arrows: t.arrows || null,
+    fb: null, t0: Date.now(), secs: 0, defenderFound: false, snap: null, introDone: !t.pre,
+  };
+  r.pos = Chess.parse(t.fen);
+  if (t.pre) r.solver = r.pos.turn === 'w' ? 'b' : 'w'; else r.solver = r.pos.turn;
+  if (t.lastMove) r.last = [Chess.sqIdx(t.lastMove[0]), Chess.sqIdx(t.lastMove[1])];
+  r.orient = t.orient || r.solver;
+  return r;
+}
+
+function leaveTask() {
+  if (R && !R.practice && R.phase !== 'done' && R.phase !== 'review') {
+    R.secs += (Date.now() - R.t0) / 1000;
+    S.pending[R.t.id] = (S.pending[R.t.id] || 0) + R.secs;
+    save();
+  }
+  R = null;
+}
+
+function renderTask(v) {
+  const t = TASKS[S.idx];
+  let fresh = false;
+  if (!R || R.t !== t) { R = newRuntime(t); fresh = true; if (S.results[t.id]) setupReview(); }
+  const wrap = el('div', 'task');
+  const head = el('div', 'task-head');
+  const bcol = el('div', 'board-col');
+  const side = el('section', 'card side');
+  wrap.append(head, bcol, side); v.appendChild(wrap);
+
+  R.api = createBoard(bcol, R.orient);
+  const under = el('div', 'under');
+  under.innerHTML = '<span class="turn" id="turn"></span><span class="moves" id="moves"></span>';
+  bcol.appendChild(under);
+  R.api.onPointer = onBoardPointer;
+  R.api.redraw = redraw;
+
+  const p = PARTS[t.part - 1];
+  head.innerHTML = `
+    <div class="kicker"><span class="part">Часть ${p.n} · ${esc(p.name)}</span><span>Задание ${S.idx + 1} из ${TASKS.length}</span></div>
+    <h2>${esc(t.title)}</h2>
+    <p class="prompt">${esc(t.kind === 'quiz' ? t.question : t.prompt)}</p>
+    <div class="steps" id="steps"></div>`;
+  side.innerHTML = `
+    <div id="body"></div>
+    <div class="fb" id="fb" role="status" aria-live="polite"></div>
+    <div class="tools" id="tools"></div>
+    <div class="stat-line" id="statline"></div>
+    <div class="nav">
+      <button class="btn ghost" id="prev" type="button" ${S.idx === 0 ? 'disabled' : ''}>← Назад</button>
+      <button class="btn" id="next" type="button">${S.idx === TASKS.length - 1 ? 'К итогам →' : 'Дальше →'}</button>
+    </div>`;
+  $('#prev').addEventListener('click', () => go(S.idx - 1));
+  $('#next').addEventListener('click', () => S.idx === TASKS.length - 1 ? finishAll() : go(S.idx + 1));
+  if (t.kind === 'quiz') buildQuiz();
+  refreshSide();
+  redraw();
+  if (fresh && t.pre && R.phase !== 'review') playIntroMove();
+}
+
+function playIntroMove() {
+  const t = R.t, rt = R;
+  R.lock = true; redraw();
+  setTimeout(() => {
+    if (R !== rt) return;
+    applyUci(t.pre);
+    R.lock = false; R.introDone = true;
+    redraw();
+  }, 650);
+}
+
+function go(i) { leaveTask(); S.idx = Math.max(0, Math.min(TASKS.length - 1, i)); save(); setScreen('task'); }
+
+function setupReview() {
+  const t = R.t;
+  R.phase = 'review';
+  if (t.kind === 'board') {
+    if (t.pre) applyUci(t.pre, true);
+    for (const u of t.line) applyUci(u, true);
+  }
+  R.arrows = t.doneArrows || t.arrows || null;
+}
+
+function applyUci(u, silent) { applyMove(Chess.findUci(R.pos, u), silent); }
+function applyMove(m, silent, bad) {
+  const san = Chess.san(R.pos, m, true);
+  R.history.push({ san, turn: R.pos.turn, full: R.pos.full, bad: !!bad });
+  R.pos = Chess.make(R.pos, m);
+  R.last = [m.from, m.to];
+  R.sel = -1; R.hint = -1;
+  if (!silent) redraw();
+}
+
+const solverTurn = () => R.pos.turn === R.solver;
+function interactive() {
+  if (!R || R.lock) return false;
+  return (R.phase === 'move' && solverTurn() && R.introDone) || R.phase === 'defender';
+}
+
+function redraw() {
+  if (!R || !R.api) return;
+  const targets = new Set();
+  if (R.phase === 'move' && R.sel >= 0) for (const m of Chess.legal(R.pos)) if (m.from === R.sel) targets.add(m.to);
+  drawBoard(R.api, R.pos, {
+    last: R.last, sel: R.sel, targets, hint: R.hint, flash: R.flash, arrows: R.arrows,
+    interactive: interactive(), pick: R.phase === 'defender',
+  });
+  const turn = $('#turn');
+  if (turn) {
+    const me = R.solver === 'w' ? '<i></i>' : '<i class="b"></i>';
+    if (R.phase === 'defender') turn.innerHTML = me + 'Найди фигуру на доске';
+    else if (R.t.kind === 'quiz') turn.innerHTML = (R.pos.turn === 'w' ? '<i></i>Ход белых' : '<i class="b"></i>Ход чёрных');
+    else if (R.phase === 'review' || R.phase === 'done') turn.innerHTML = me + 'Позиция после решения';
+    else if (R.phase === 'refute') turn.innerHTML = me + 'Разбор ошибки';
+    else if (!R.introDone) turn.innerHTML = (R.solver === 'w' ? '<i class="b"></i>Ход чёрных…' : '<i></i>Ход белых…');
+    else turn.innerHTML = solverTurn() ? me + 'Ты играешь ' + (R.solver === 'w' ? 'белыми' : 'чёрными') + '. Твой ход'
+      : (R.solver === 'w' ? '<i class="b"></i>Чёрные думают…' : '<i></i>Белые думают…');
+  }
+  const mv = $('#moves');
+  if (mv) {
+    mv.innerHTML = R.history.map((h, i) => {
+      const num = h.turn === 'w' ? `<span class="num">${h.full}.</span>` : (i === 0 ? `<span class="num">${h.full}…</span>` : '');
+      return num + `<span class="mv${h.bad ? ' bad' : i === R.history.length - 1 ? ' last' : ''}">${esc(h.san)}${h.bad ? '?' : ''}</span>`;
+    }).join('');
+  }
+}
+
+function setFb(kind, html) { R.fb = { kind, html }; const f = $('#fb'); if (f) { f.className = 'fb ' + (kind || ''); f.innerHTML = html; } }
+
+function refreshSide() {
+  const t = R.t;
+  const steps = $('#steps'); steps.innerHTML = '';
+  if (t.kind === 'board') {
+    steps.appendChild(el('span', 'chip', (R.solver === 'w' ? '<i></i>Ты за белых' : '<i class="b"></i>Ты за чёрных')));
+    if (t.defender) {
+      const a = el('span', 'chip ' + (R.phase === 'defender' ? 'on' : 'done'), esc(t.defender.step1 || '1. Найди защитника'));
+      const b = el('span', 'chip ' + (R.phase === 'move' || R.phase === 'refute' ? 'on' : (R.phase === 'done' || R.phase === 'review') ? 'done' : ''), esc(t.defender.step2 || '2. Убери его'));
+      steps.append(a, b);
+    }
+    if (t.moves) steps.appendChild(el('span', 'chip', esc(t.moves)));
+  }
+  if (t.star) steps.appendChild(el('span', 'chip', '★ трудная'));
+
+  const tools = $('#tools'); tools.innerHTML = '';
+  const st = $('#statline');
+  if (R.phase === 'review') {
+    const r = S.results[t.id];
+    setFb('done', `<strong>Уже решено.</strong> ${esc(t.explain || t.options.find(o => o.ok).why)}`);
+    st.textContent = resultLine(t, r);
+    const again = el('button', 'btn', 'Решить ещё раз (без оценки)'); again.type = 'button';
+    again.addEventListener('click', () => { R = newRuntime(t, true); render(); if (t.pre) playIntroMove(); });
+    tools.appendChild(again);
+    if (t.kind === 'quiz') markQuizReview();
+    return;
+  }
+  if (!R.fb) {
+    if (R.phase === 'defender') setFb('info', '<strong>Шаг 1.</strong> ' + esc(t.defender.ask));
+    else if (R.phase === 'move') setFb('', esc(t.start || (t.mate ? 'Найди мат.' : 'Найди лучший ход.')));
+    else if (R.phase === 'quiz') setFb('', 'Выбери ответ.');
+  } else setFb(R.fb.kind, R.fb.html);
+  updateStat();
+
+  if (R.phase === 'done' || R.phase === 'refute') return;
+  if (t.kind === 'board') {
+    const h = el('button', 'btn', ICON_BULB + 'Подсказка'); h.type = 'button';
+    h.disabled = true; h.style.opacity = '0.35'; h.style.cursor = 'not-allowed';
+    setTimeout(() => {
+      if (R && R.phase === 'move' && h.parentNode) {
+        h.disabled = false; h.style.opacity = '1'; h.style.cursor = 'pointer';
+        h.title = 'Доступна подсказка';
+      }
+    }, 25000);
+    h.addEventListener('click', giveHint);
+
+    const rs = el('button', 'btn ghost', 'Заново'); rs.type = 'button';
+    rs.addEventListener('click', resetPuzzle);
+
+    const sol = el('button', 'btn ghost', 'Показать решение'); sol.type = 'button';
+    if (R.mistakes < 3) {
+      sol.disabled = true; sol.style.opacity = '0.35'; sol.title = 'Нужно совершить хотя бы 3 ошибки, чтобы открыть решение';
+    }
+    armTwoStep(sol, 'Точно? Задача не засчитается', showSolution);
+    tools.append(h, rs, sol);
+  }
+}
+function updateStat() {
+  const st = $('#statline'); if (!st || !R || R.phase === 'review') return;
+  if (R.practice) { st.textContent = 'Тренировка: результат уже записан и не изменится.'; return; }
+  st.textContent = (R.t.kind === 'quiz' ? `Попыток: ${R.attempts}` : `Ошибок: ${R.mistakes} · подсказок: ${R.hints}`);
+}
+
+function onBoardPointer(kind, sq, fromSq) {
+  if (!R) return null;
+  if (R.phase === 'defender') { if (kind === 'down' && !R.lock) pickDefender(sq); return null; }
+  if (!interactive()) return null;
+  const pc = sq >= 0 ? R.pos.board[sq] : null;
+  if (kind === 'drop') {
+    if (sq < 0 || sq === fromSq) return null;
+    tryMove(fromSq, sq); return null;
+  }
+  if (R.sel >= 0 && R.sel !== sq) {
+    if (Chess.legal(R.pos).some(m => m.from === R.sel && m.to === sq)) { tryMove(R.sel, sq); return null; }
+  }
+  if (pc && pc.c === R.pos.turn) { R.sel = sq; redraw(); return { drag: true, id: pc.id }; }
+  R.sel = -1; redraw();
+  return null;
+}
+
+function pickDefender(sq) {
+  const d = R.t.defender, name = Chess.sqName(sq);
+  if (sq === Chess.sqIdx(d.sq)) {
+    R.flash = { [sq]: 'ok' }; R.phase = 'move'; R.hint = -1; R.defenderFound = true;
+    setFb('ok', '<strong>Верно!</strong> ' + esc(d.ok));
+    refreshSide(); redraw();
+    setTimeout(() => { if (R && R.flash) { R.flash = null; redraw(); } }, 900);
+    return;
+  }
+  if (d.soft && d.soft[name]) { setFb('info', '<strong>Почти.</strong> ' + esc(d.soft[name])); return; }
+  if (!R.pos.board[sq]) { setFb('info', 'Нажми на фигуру, а не на пустое поле.'); return; }
+  if (!R.practice) { R.mistakes++; R.wrong.push('клик ' + name); }
+  R.flash = { [sq]: 'bad' }; redraw();
+  setTimeout(() => { if (R && R.flash) { R.flash = null; redraw(); } }, 700);
+  setFb('bad', '<strong>Не та фигура.</strong> ' + esc(d.bad));
+  updateStat();
+}
+
+/* ---------- ходы ---------- */
+const PIECE_ACC = { p: 'пешку', n: 'коня', b: 'слона', r: 'ладью', q: 'ферзя', k: 'короля' };
+
+function sanLine(pos, ucis) {
+  let p = pos; const out = [];
+  for (const u of ucis) {
+    const m = Chess.findUci(p, u); if (!m) break;
+    const s = Chess.san(p, m, true);
+    out.push((p.turn === 'w' ? p.full + '. ' : (out.length === 0 ? p.full + '… ' : '')) + s);
+    p = Chess.make(p, m);
+  }
+  return out.join(' ');
+}
+
+function wrongText(t, w, mySan, replySan, posAfterReply) {
+  const opp = sideName(R.solver === 'w' ? 'b' : 'w', true);
+  let txt;
+  if (w.t) txt = w.t.replace(/\{R\}/g, replySan || '');
+  else if (w.k === 'm') txt = w.n === 1 ? `${opp} отвечают ${replySan} — и это мат!` : `${opp} отвечают ${replySan}, и скоро тебе поставят мат.`;
+  else if (w.k === 'l') txt = `${opp} отвечают ${replySan}, и ты теряешь ${w.x}.`;
+  else if (w.k === 'b') txt = `${opp} отвечают ${replySan}, и твоя позиция становится плохой.`;
+  else if (w.k === 'e') txt = `${opp} отвечают ${replySan}. Ты ничего не выигрываешь${t.mate ? ', а в этой позиции есть мат' : t.gain ? ', а в этой позиции можно выиграть ' + t.gain : ''}.`;
+  else if (w.k === 'w') txt = `${opp} отвечают ${replySan}. Это неплохо, но слабее: ${t.gain ? 'правильный ход выигрывает ' + t.gain : 'есть ход сильнее'}.`;
+  else txt = 'Этот ход ничего не даёт.';
+  let html = `<strong>${esc(mySan)}?</strong> ${esc(txt)}`;
+  if (w.p && w.p.length && posAfterReply && w.k !== 'e') {
+    const line = sanLine(posAfterReply, w.p);
+    if (line) html += `<span class="line">Дальше может быть так: <b>${esc(line)}</b></span>`;
+  }
+  return html;
+}
+
+function tryMove(from, to) {
+  const m = Chess.legal(R.pos).find(x => x.from === from && x.to === to);
+  if (!m) { R.sel = -1; redraw(); return; }
+  const t = R.t, u = Chess.uci(m), exp = t.line[R.step];
+  const lastSolver = R.step >= t.line.length - 1;
+  const alts = (t.alts && t.alts[R.step]) || [];
+  const mates = lastSolver && Chess.isMate(Chess.make(R.pos, m));
+  if (u === exp || alts.includes(u) || mates) {
+    const cmt = t.comments && t.comments[R.step / 2];
+    applyMove(m);
+    R.step++;
+    if (R.step >= t.line.length || Chess.isMate(R.pos)) { finishTask(); return; }
+    setFb('ok', '<strong>Да!</strong> ' + (cmt ? esc(cmt) : 'Хороший ход.'));
+    R.lock = true; redraw();
+    const rt = R;
+    setTimeout(() => {
+      if (R !== rt) return;
+      applyUci(t.line[R.step]); R.step++; R.lock = false;
+      if (R.step >= t.line.length) { finishTask(); return; }
+      const san = R.history[R.history.length - 1].san;
+      setFb('ok', '<strong>Да!</strong> ' + (cmt ? esc(cmt) + ' ' : '') + sideName(R.solver === 'w' ? 'b' : 'w', true) + ' ответили <strong>' + esc(san) + '</strong>. Твой ход!');
+      redraw();
+    }, 750);
+    return;
+  }
+  const san = Chess.san(R.pos, m, true);
+  const w = t.wrong && t.wrong[R.step] && t.wrong[R.step][u];
+  if (t.wrongMsg || !w || w.k === 's') {
+    // мягкий отказ: показать и вернуть
+    const keep = { pos: R.pos, last: R.last };
+    R.pos = Chess.make(R.pos, m); R.last = [m.from, m.to]; R.sel = -1; R.lock = true;
+    const soft = w && w.k === 's';
+    R.flash = soft ? null : { [m.to]: 'bad' };
+    redraw();
+    const rt = R;
+    setTimeout(() => { if (R !== rt) return; R.pos = keep.pos; R.last = keep.last; R.flash = null; R.lock = false; redraw(); }, 800);
+    if (soft) { setFb('info', '<strong>' + esc(san) + '</strong> — ' + esc(w.t || 'неплохой ход, но есть ещё сильнее. Поищи!')); return; }
+    if (!R.practice) { R.mistakes++; R.wrong.push(san); }
+    setFb('bad', '<strong>' + esc(san) + '?</strong> ' + esc(t.wrongMsg || (lastSolver && t.finalMsg) || 'Этот ход не работает. Подумай ещё.'));
+    updateStat();
+    return;
+  }
+  // разбор ошибки: ход остаётся на доске, соперник отвечает
+  if (!R.practice) { R.mistakes++; R.wrong.push(san); }
+  R.snap = { pos: R.pos, last: R.last, hlen: R.history.length };
+  applyMove(m, false, true);
+  R.phase = 'refute'; R.lock = true; R.arrows = null;
+  setFb('bad', '<strong>' + esc(san) + '?</strong> Смотри, что ответит соперник…');
+  refreshSide(); updateStat(); redraw();
+  const rt = R;
+  setTimeout(() => {
+    if (R !== rt) return;
+    let replySan = '';
+    if (w.r) {
+      const rm = Chess.findUci(R.pos, w.r);
+      if (rm) { replySan = Chess.san(R.pos, rm, true); applyMove(rm); }
+    }
+    if (w.a) R.arrows = w.a.map(x => [x[0], x[1], true]);
+    R.lock = false;
+    setFb('bad', wrongText(t, w, san, replySan, R.pos) + `<div class="act"><button class="btn primary" id="undo" type="button">${ICON_UNDO}Вернуть ход</button></div>`);
+    $('#undo').addEventListener('click', undoWrong);
+    redraw();
+    const ub = $('#undo'); if (ub) ub.focus({ preventScroll: true });
+  }, 800);
+}
+
+function undoWrong() {
+  if (!R || R.phase !== 'refute' || !R.snap) return;
+  R.pos = R.snap.pos; R.last = R.snap.last; R.history.length = R.snap.hlen; R.snap = null;
+  R.phase = 'move'; R.arrows = null; R.lock = false; R.sel = -1;
+  setFb('info', 'Ход вернули. Попробуй найти другой.');
+  refreshSide(); redraw();
+}
+
+function giveHint() {
+  if (!R || R.lock || R.phase === 'refute') return;
+  const t = R.t;
+  if (R.phase === 'defender') {
+    if (!R.hintSteps.has('d')) { R.hintSteps.add('d'); if (!R.practice) R.hints++; }
+    setFb('info', '<strong>Подсказка.</strong> ' + esc(t.defender.hint));
+    updateStat(); return;
+  }
+  if (R.phase !== 'move' || !solverTurn() || !R.introDone) return;
+  if (!R.hintSteps.has(R.step)) { R.hintSteps.add(R.step); if (!R.practice) R.hints++; }
+  const m = Chess.findUci(R.pos, t.line[R.step]);
+  R.hint = m.from; R.sel = -1; redraw();
+  setFb('info', '<strong>Подсказка.</strong> ' + esc((t.hints && t.hints[Math.floor(R.step / 2)]) || 'Подсвеченной фигурой нужно сходить.'));
+  updateStat();
+}
+
+function resetPuzzle() {
+  if (!R || R.lock) return;
+  const keep = { mistakes: R.mistakes, hints: R.hints, hintSteps: R.hintSteps, wrong: R.wrong, t0: R.t0, secs: R.secs, practice: R.practice, defenderFound: R.defenderFound };
+  R = Object.assign(newRuntime(R.t, keep.practice), keep);
+  if (R.t.defender && R.defenderFound) R.phase = 'move';
+  render();
+  if (R.t.pre) playIntroMove();
+}
+
+function showSolution() {
+  if (!R || R.phase === 'done' || R.phase === 'review' || R.lock) return;
+  if (R.phase === 'refute') undoWrong();
+  const t = R.t;
+  if (!R.practice) R.shown = true;
+  R.lock = true;
+  const rt = R;
+  const play = () => {
+    if (R !== rt) return;
+    if (R.step >= t.line.length) { R.lock = false; finishTask(); return; }
+    applyUci(t.line[R.step]); R.step++;
+    setTimeout(play, 850);
+  };
+  if (R.phase === 'defender') {
+    const sq = Chess.sqIdx(t.defender.sq);
+    R.flash = { [sq]: 'ok' }; R.phase = 'move'; redraw();
+    setFb('info', '<strong>Ответ:</strong> ' + esc(t.defender.ok));
+    setTimeout(() => { if (R !== rt) return; R.flash = null; play(); }, 1300);
+  } else { setFb('info', 'Смотри решение…'); play(); }
+}
+
+function finishTask() {
+  const t = R.t;
+  R.phase = 'done'; R.lock = false;
+  const secs = R.secs + (Date.now() - R.t0) / 1000 + (S.pending[t.id] || 0);
+  let score;
+  if (t.kind === 'quiz') score = R.attempts === 0 ? 2 : R.attempts === 1 ? 1 : 0;
+  else score = R.shown ? 0 : Math.max(1, 3 - R.mistakes - R.hints);
+  let newResult = false;
+  if (!R.practice && !S.results[t.id]) {
+    S.results[t.id] = { score, m: R.mistakes, h: R.hints, sh: R.shown ? 1 : 0, a: R.attempts, w: R.wrong.slice(0, 8), s: Math.round(secs) };
+    delete S.pending[t.id];
+    if (doneCount() === TASKS.length && !S.finishedAt) S.finishedAt = Date.now();
+    save(); newResult = true;
+  }
+  R.arrows = t.doneArrows || null;
+  const mateNow = t.kind === 'board' && Chess.isMate(R.pos);
+  let head;
+  if (R.shown) head = '<strong>Решение.</strong> ';
+  else if (t.kind === 'quiz') head = '<span class="big">' + (R.attempts === 0 ? 'Верно!' : 'Правильно.') + '</span>';
+  else head = '<span class="big">' + (mateNow ? 'Мат! ' : '') + (R.mistakes + R.hints === 0 ? 'Отлично, с первой попытки!' : 'Решено!') + '</span>';
+  const body = t.kind === 'quiz' ? '' : esc(t.explain);
+  setFb('done', head + body);
+  renderSheet(); refreshSide(); redraw();
+  const nx = $('#next'); if (nx) { nx.classList.add('primary'); nx.focus({ preventScroll: true }); }
+  if (newResult) REP.taskDone(t);
+}
+
+/* ---------- викторина ---------- */
+function buildQuiz() {
+  const t = R.t, body = $('#body');
+  const box = el('div', 'opts');
+  t.options.forEach((o, i) => {
+    const b = el('button', 'opt'); b.type = 'button';
+    b.innerHTML = `<span class="l">${'абвг'[i]})</span><span>${esc(o.t)}</span>`;
+    b.addEventListener('click', () => answer(i, b));
+    box.appendChild(b);
+  });
+  body.appendChild(box);
+}
+
+function answer(i, b) {
+  if (!R || R.phase !== 'quiz') return;
+  const o = R.t.options[i];
+  if (R.triedOpts.has(i)) return;
+  R.triedOpts.add(i);
+  b.appendChild(el('span', 'why', esc(o.why)));
+  if (o.ok) {
+    b.classList.add('good');
+    document.querySelectorAll('.opt').forEach(x => x.disabled = true);
+    finishTask();
+    setFb('done', R.fb.html + ' ' + esc(o.why));
+  } else {
+    b.classList.add('bad'); b.disabled = true;
+    if (!R.practice) { R.attempts++; R.wrong.push('ответ «' + 'абвг'[i] + '»'); }
+    setFb('bad', '<strong>Не совсем.</strong> Прочитай под ответом, почему, и попробуй ещё.');
+    updateStat();
+  }
+}
+
+function markQuizReview() {
+  const t = R.t, box = $('.opts'); if (!box) return;
+  box.querySelectorAll('.opt').forEach((b, i) => {
+    b.disabled = true;
+    if (t.options[i].ok) { b.classList.add('good'); b.appendChild(el('span', 'why', esc(t.options[i].why))); }
+  });
+}
+
+/* ===================== Итоги ===================== */
+function finishAll() {
+  leaveTask();
+  if (!S.finishedAt && doneCount() === TASKS.length) S.finishedAt = Date.now();
+  save(); setScreen('results');
+}
+
+function gradeOf(pct) {
+  if (pct >= .9) return { mark: '5', word: 'Отлично!' };
+  if (pct >= .75) return { mark: '4', word: 'Хорошо!' };
+  if (pct >= .55) return { mark: '3', word: 'Неплохо, но надо повторить' };
+  return { mark: '?', word: 'Разберём на уроке' };
+}
+
+function resultLine(t, r) {
+  if (!r) return 'не решено';
+  if (t.kind === 'quiz') return r.a === 0 ? 'верно с первой попытки' : 'верно с ' + (r.a + 1) + '-й попытки';
+  if (r.sh) return 'решение подсмотрено';
+  if (!r.m && !r.h) return 'с первой попытки';
+  const parts = [];
+  if (r.m) parts.push(r.m + ' ' + plural(r.m, 'ошибка', 'ошибки', 'ошибок'));
+  if (r.h) parts.push(r.h + ' ' + plural(r.h, 'подсказка', 'подсказки', 'подсказок'));
+  return 'решено: ' + parts.join(', ');
+}
+
+function renderResults(v) {
+  const { got, max } = totals();
+  const pct = max ? got / max : 0;
+  const all = doneCount() === TASKS.length;
+  const g = gradeOf(pct);
+  const secs = TASKS.reduce((a, t) => a + (S.results[t.id] ? S.results[t.id].s : 0), 0);
+  const list = TASKS.map(t => S.results[t.id]).filter(Boolean);
+  const first = TASKS.filter(t => { const r = S.results[t.id]; return r && r.score === maxOf(t); }).length;
+  const hints = list.reduce((a, r) => a + (r.h || 0), 0);
+  const shown = list.reduce((a, r) => a + (r.sh || 0), 0);
+
+  const wrap = el('div', 'res');
+  const left = el('section', 'card grade');
+  left.innerHTML = all ? `
+      <div class="eyebrow">Оценка</div>
+      <div class="mark">${g.mark}</div>
+      <div class="word">${esc(g.word)}</div>` : `
+      <div class="eyebrow">Ещё не всё</div>
+      <div class="word" style="margin-top:6px">Решено ${doneCount()} из ${TASKS.length}</div>`;
+  left.insertAdjacentHTML('beforeend', `
+    <dl class="kv">
+      <dt>Баллы</dt><dd>${got} / ${max}</dd>
+      <dt>С первой попытки</dt><dd>${first} из ${TASKS.length}</dd>
+      <dt>Подсказок</dt><dd>${hints}</dd>
+      <dt>Подсмотрено решений</dt><dd>${shown}</dd>
+      <dt>Время</dt><dd>${fmtMin(secs)}</dd>
+    </dl>`);
+
+  const right = el('section', 'card');
+  right.innerHTML = `<h2 style="font-size:22px;font-weight:600">${all ? 'Домашка готова' : 'Почти готово'}</h2>
+    <div id="sent-box" style="margin-top:12px"></div>
+    <div class="row" style="margin-top:12px">
+      ${all ? '' : '<button class="btn primary" id="back-to-work" type="button">Доделать задачи</button>'}
+      <button class="btn" id="retry" type="button">Порешать ошибки ещё раз</button>
+    </div>
+    <h3 style="font-size:16px;font-weight:600;margin-top:22px">Задачи</h3>
+    <div class="tbl-wrap">${reportTable(S.results)}</div>`;
+  wrap.append(left, right); v.appendChild(wrap);
+  renderSent();
+  const bw = $('#back-to-work');
+  if (bw) bw.addEventListener('click', () => { S.idx = TASKS.findIndex(t => !S.results[t.id]); save(); setScreen('task'); });
+  $('#retry').addEventListener('click', () => {
+    const i = TASKS.findIndex(t => S.results[t.id] && S.results[t.id].score < maxOf(t));
+    S.idx = i >= 0 ? i : 0; save(); setScreen('task');
+  });
+}
+
+function renderSent() {
+  const box = $('#sent-box'); if (!box) return;
+  if (!TG.on()) { box.innerHTML = ''; return; }
+  const all = doneCount() === TASKS.length;
+  const waiting = S.tg.q.length > 0 || !!S.tg.prog;
+  if (!all) box.innerHTML = `<div class="sent wait">${ICON_CLOCK}<span>Тренер видит, сколько задач уже решено. Когда решишь все, он получит итог.</span></div>`;
+  else if (!waiting && S.tg.finalSent) box.innerHTML = `<div class="sent ok">${ICON_CHECK}<span>Результат отправлен тренеру. Больше ничего делать не нужно!</span></div>`;
+  else if (REP.failed) box.innerHTML = `<div class="sent err">${ICON_CLOCK}<span>Пока не получилось отправить результат: нет связи. Проверь интернет. Результат уйдёт сам, когда страница снова будет открыта с интернетом.</span></div>`;
+  else box.innerHTML = `<div class="sent wait">${ICON_CLOCK}<span>Отправляем результат тренеру…</span></div>`;
+}
+
+function reportTable(results) {
+  let html = '<table class="rep"><thead><tr><th>№</th><th>Задача</th><th>Результат</th><th>Баллы</th><th>Время</th></tr></thead><tbody>';
+  for (const p of PARTS) {
+    html += `<tr class="part-row"><td colspan="5">Часть ${p.n}. ${esc(p.name)}</td></tr>`;
+    TASKS.forEach((t, i) => {
+      if (t.part !== p.n) return;
+      const r = results[t.id], m = maxOf(t);
+      const cls = !r ? 'none' : r.score === m ? 'full' : r.score > 0 ? 'part' : 'zero';
+      const wrong = r && r.w && r.w.length ? `<div class="wrong">Ошибки: <b>${r.w.map(esc).join(', ')}</b></div>` : '';
+      html += `<tr><td class="n">${i + 1}</td><td>${esc(t.title)}${wrong}</td>
+        <td><span class="badge ${cls}">${esc(resultLine(t, r))}</span></td>
+        <td class="pts">${r ? r.score : '—'} / ${m}</td><td class="pts">${r ? fmtMin(r.s) : '—'}</td></tr>`;
+    });
+  }
+  return html + '</tbody></table>';
+}
+
+/* ===================== Отправка тренеру в Telegram ===================== */
+const TG = {
+  cfg: TGCFG,
+  mode: null, // 'cors' — видим ответы Telegram; 'nocors' — только отправляем
+  on() { return !!(this.cfg.token && this.cfg.chat); },
+  url(method, cfg) { return 'https://api.telegram.org/bot' + (cfg || this.cfg).token + '/' + method; },
+  async probe(cfg) {
+    try {
+      const r = await fetch(this.url('getMe', cfg));
+      const j = await r.json();
+      return { ok: !!j.ok, cors: true, data: j };
+    } catch (e) { return { ok: false, cors: false }; }
+  },
+  async call(method, params, cfg, mode) {
+    const body = new URLSearchParams(params);
+    if ((mode || this.mode) === 'cors') {
+      try { const r = await fetch(this.url(method, cfg), { method: 'POST', body }); return await r.json(); }
+      catch (e) { return { ok: false, net: true }; }
+    }
+    try { await fetch(this.url(method, cfg), { method: 'POST', mode: 'no-cors', body }); return { ok: true, opaque: true }; }
+    catch (e) { return { ok: false, net: true }; }
+  },
+};
+
+function hhmm(ts) { const d = new Date(ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+
+function errorsLines(limitAll) {
+  const lines = [];
+  TASKS.forEach((t, i) => {
+    const r = S.results[t.id]; if (!r) return;
+    if (r.score === maxOf(t)) return;
+    const bits = [];
+    if (r.w && r.w.length) bits.push(r.w.join(', '));
+    if (r.h) bits.push(r.h + ' ' + plural(r.h, 'подсказка', 'подсказки', 'подсказок'));
+    if (r.sh) bits.push('подсмотрел(а) решение');
+    lines.push('№' + (i + 1) + (limitAll ? ' «' + t.title + '»' : '') + ': ' + bits.join('; '));
+  });
+  return lines;
+}
+
+function progressText() {
+  const { got, max } = totals();
+  const done = doneCount();
+  const first = TASKS.filter(t => { const r = S.results[t.id]; return r && r.score === maxOf(t); }).length;
+  const L = [];
+  L.push((done === TASKS.length ? '✅ ' : '📘 ') + HW.title + ' — ' + S.name + (S.tg.attempt > 1 ? ' (попытка ' + S.tg.attempt + ')' : ''));
+  L.push('Решено ' + done + ' из ' + TASKS.length + ' · баллы ' + got + ' из ' + max);
+  L.push('С первой попытки: ' + first);
+  const er = errorsLines(false);
+  if (er.length) { L.push('Ошибки:'); er.forEach(x => L.push(x)); }
+  L.push('Обновлено ' + hhmm(Date.now()));
+  return L.join('\n');
+}
+
+function finalText() {
+  const { got, max } = totals();
+  const pct = max ? got / max : 0;
+  const g = gradeOf(pct);
+  const secs = TASKS.reduce((a, t) => a + (S.results[t.id] ? S.results[t.id].s : 0), 0);
+  const first = TASKS.filter(t => { const r = S.results[t.id]; return r && r.score === maxOf(t); }).length;
+  const L = [];
+  L.push('🏁 ' + S.name + ' сдал(а) домашку «' + HW.title + '»' + (S.tg.attempt > 1 ? ' (попытка ' + S.tg.attempt + ')' : ''));
+  L.push('Итог: ' + got + ' из ' + max + ' (' + Math.round(pct * 100) + '%)' + (g.mark !== '?' ? ' · оценка ' + g.mark : '') + ' · время ' + fmtMin(secs));
+  L.push('С первой попытки: ' + first + ' из ' + TASKS.length);
+  const er = errorsLines(true);
+  if (er.length) { L.push(''); L.push('Где были ошибки:'); er.forEach(x => L.push(x)); }
+  else L.push('Ни одной ошибки!');
+  return L.join('\n');
+}
+
+const REP = {
+  busy: false, failed: false, timer: 0,
+  start() {
+    if (!TG.on()) return;
+    S.tg.msg = 0; S.tg.finalSent = false;
+    S.tg.q.push({ kind: 'start', text: '▶️ ' + S.name + ' начал(а) домашку «' + HW.title + '»' + (S.tg.attempt > 1 ? ' (попытка ' + S.tg.attempt + ')' : '') + '\nРешено 0 из ' + TASKS.length });
+    save(); this.flush();
+  },
+  taskDone(t) {
+    if (!TG.on()) return;
+    const done = doneCount();
+    if (done === TASKS.length) {
+      S.tg.prog = progressText();
+      S.tg.q.push({ kind: 'final', text: finalText() });
+    } else if (TG.mode === 'nocors') {
+      // без ответа Telegram нельзя обновлять одно сообщение — шлём по итогам каждой части
+      const p = PARTS.find(pp => pp.n === t.part);
+      const partDone = TASKS.filter(x => x.part === t.part).every(x => S.results[x.id]);
+      if (partDone && p) S.tg.q.push({ kind: 'part', text: '📘 ' + S.name + ': готова часть ' + p.n + ' «' + p.name + '»\n' + progressText() });
+    } else {
+      S.tg.prog = progressText();
+    }
+    save(); this.flush();
+  },
+  async ensureMode() {
+    if (TG.mode) return TG.mode;
+    const pr = await TG.probe();
+    if (pr.cors) TG.mode = 'cors';
+    else if (navigator.onLine !== false) TG.mode = 'nocors';
+    return TG.mode;
+  },
+  async flush() {
+    if (!TG.on() || this.busy) return;
+    if (!S.tg.q.length && !S.tg.prog) return;
+    this.busy = true;
+    try {
+      const mode = await this.ensureMode();
+      if (!mode) { this.fail(); return; }
+      while (S.tg.q.length) {
+        const item = S.tg.q[0];
+        const res = await TG.call('sendMessage', { chat_id: TG.cfg.chat, text: item.text, disable_web_page_preview: 'true' });
+        if (!res.ok && res.net) { this.fail(); return; }
+        S.tg.q.shift();
+        if (item.kind === 'start' && res.result && res.result.message_id) S.tg.msg = res.result.message_id;
+        if (item.kind === 'final') S.tg.finalSent = true;
+        save();
+      }
+      if (S.tg.prog) {
+        if (mode === 'cors') {
+          let res = { ok: false };
+          if (S.tg.msg) res = await TG.call('editMessageText', { chat_id: TG.cfg.chat, message_id: S.tg.msg, text: S.tg.prog });
+          if (res.net) { this.fail(); return; }
+          if (!res.ok && !(res.description && /not modified/i.test(res.description))) {
+            const r2 = await TG.call('sendMessage', { chat_id: TG.cfg.chat, text: S.tg.prog, disable_notification: 'true' });
+            if (r2.net) { this.fail(); return; }
+            if (r2.result && r2.result.message_id) S.tg.msg = r2.result.message_id;
+          }
+        }
+        S.tg.prog = '';
+        save();
+      }
+      this.failed = false;
+    } finally {
+      this.busy = false;
+      if (screen === 'results') renderSent();
+    }
+  },
+  fail() {
+    this.failed = true; this.busy = false;
+    if (screen === 'results') renderSent();
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.flush(), 20000);
+  },
+};
+window.addEventListener('online', () => REP.flush());
+
+/* ===================== Настройка для тренера ===================== */
+function renderCoach(v) {
+  const box = el('div', 'coach');
+  const draft = { token: TG.cfg.token || '', chat: TG.cfg.chat || '', bot: '' };
+  box.innerHTML = `
+    <section class="card stepbox">
+      <h2>Результаты учеников в Telegram</h2>
+      <p class="muted" style="margin:0">Один раз настрой бота, скачай готовый файл и отправляй его ученикам. Когда ученик решает задачи, бот присылает тебе, сколько решено и где были ошибки. Ученику ничего делать не нужно.</p>
+      <p class="small muted" style="margin:0">Настраивай с выключенным VPN: если у тебя всё дойдёт, то и у учеников дойдёт.</p>
+    </section>
+    <section class="card stepbox">
+      <div class="num">Шаг 1. Создай бота</div>
+      <ol>
+        <li>В Telegram найди <b>@BotFather</b> и нажми «Start».</li>
+        <li>Отправь ему <code>/newbot</code>, придумай имя (например, «Шахматы — домашки») и адрес, который заканчивается на <code>bot</code>.</li>
+        <li>BotFather пришлёт токен — длинную строку вида <code>123456789:AAH…</code>. Скопируй её сюда.</li>
+      </ol>
+      <div class="field" style="margin-top:6px"><label for="tg-token">Токен бота</label><input id="tg-token" type="text" autocomplete="off" spellcheck="false" placeholder="123456789:AA…"></div>
+      <div class="row"><button class="btn" id="tg-check" type="button">Проверить токен</button></div>
+      <div class="msg" id="tg-msg1"></div>
+    </section>
+    <section class="card stepbox">
+      <div class="num">Шаг 2. Напиши боту</div>
+      <p style="margin:0">Открой своего бота в Telegram, нажми «Start» или напиши ему любое сообщение. Потом нажми кнопку ниже.</p>
+      <div class="row"><button class="btn" id="tg-find" type="button">Найти мой чат</button></div>
+      <div class="msg" id="tg-msg2"></div>
+      <div id="tg-manual" hidden>
+        <p class="small" style="margin:0">Не получилось найти автоматически. Открой эту ссылку в новой вкладке: <a id="tg-upd" href="#" target="_blank" rel="noopener">getUpdates</a>. Найди там <code>"chat":{"id":</code> и скопируй число после него.</p>
+        <div class="field" style="margin-top:8px"><label for="tg-chat">Номер чата</label><input id="tg-chat" type="text" inputmode="numeric" autocomplete="off" placeholder="например, 123456789"></div>
+      </div>
+    </section>
+    <section class="card stepbox">
+      <div class="num">Шаг 3. Проверь и скачай файл</div>
+      <div class="row">
+        <button class="btn" id="tg-test" type="button">Отправить проверочное сообщение</button>
+        <button class="btn primary" id="tg-dl" type="button">Скачать файл для учеников</button>
+      </div>
+      <div class="msg" id="tg-msg3"></div>
+      <p class="small muted" style="margin:0">Скачанный файл и отправляй ученикам. Этот бот используй только для домашек: токен хранится внутри файла.</p>
+    </section>
+    <div class="row"><button class="btn ghost" id="coach-back" type="button">← Вернуться к домашке</button></div>`;
+  v.appendChild(box);
+  const tok = $('#tg-token'), chat = $('#tg-chat');
+  tok.value = draft.token; chat.value = draft.chat;
+  const m1 = $('#tg-msg1'), m2 = $('#tg-msg2'), m3 = $('#tg-msg3');
+  const say = (elm, cls, text) => { elm.className = 'msg ' + cls; elm.textContent = text; };
+  const cur = () => ({ token: tok.value.trim(), chat: chat.value.trim() || draft.chat });
+  tok.addEventListener('input', () => { draft.token = tok.value.trim(); });
+  chat.addEventListener('input', () => { draft.chat = chat.value.trim(); });
+
+  $('#tg-check').addEventListener('click', async () => {
+    const c = cur();
+    if (!/^\d+:[\w-]{20,}$/.test(c.token)) { say(m1, 'err', 'Это не похоже на токен. Он выглядит так: 123456789:AAH… (цифры, двоеточие, буквы).'); return; }
+    say(m1, '', 'Проверяю…');
+    const pr = await TG.probe(c);
+    if (pr.ok) { draft.bot = pr.data.result.username; say(m1, 'ok', 'Бот найден: @' + draft.bot + '. Теперь напиши ему в Telegram.'); }
+    else if (pr.cors && pr.data && !pr.data.ok) say(m1, 'err', 'Telegram не принял токен. Скопируй его из BotFather ещё раз целиком.');
+    else say(m1, 'err', 'Не получилось связаться с Telegram отсюда. Если токен скопирован верно, переходи к шагу 2 и введи номер чата вручную.');
+    $('#tg-upd').href = TG.url('getUpdates', c);
+  });
+
+  $('#tg-find').addEventListener('click', async () => {
+    const c = cur();
+    if (!c.token) { say(m2, 'err', 'Сначала вставь токен в шаге 1.'); return; }
+    $('#tg-upd').href = TG.url('getUpdates', c);
+    say(m2, '', 'Ищу…');
+    try {
+      const r = await fetch(TG.url('getUpdates', c));
+      const j = await r.json();
+      const ups = (j.result || []).map(u => u.message || u.edited_message || u.my_chat_member).filter(Boolean);
+      const last = ups.reverse().find(mm => mm.chat && mm.chat.type === 'private');
+      if (last) {
+        draft.chat = String(last.chat.id); chat.value = draft.chat;
+        const who = [last.chat.first_name, last.chat.last_name].filter(Boolean).join(' ') || last.chat.username || '';
+        say(m2, 'ok', 'Нашёл чат' + (who ? ': ' + who : '') + ' (номер ' + draft.chat + ').');
+        $('#tg-manual').hidden = false;
+      } else if (j.ok) {
+        say(m2, 'err', 'Бот пока не видит сообщений. Напиши ему в Telegram что-нибудь и нажми кнопку ещё раз.');
+      } else { say(m2, 'err', 'Telegram не принял токен. Проверь шаг 1.'); }
+    } catch (e) {
+      say(m2, 'err', 'Автоматически не получилось. Введи номер чата вручную.');
+      $('#tg-manual').hidden = false;
+    }
+  });
+
+  $('#tg-test').addEventListener('click', async () => {
+    const c = cur();
+    if (!c.token || !c.chat) { say(m3, 'err', 'Нужны токен (шаг 1) и номер чата (шаг 2).'); return; }
+    say(m3, '', 'Отправляю…');
+    const pr = await TG.probe(c);
+    const res = await TG.call('sendMessage', { chat_id: c.chat, text: '✅ Проверка связи: домашка «' + HW.title + '» сможет присылать сюда результаты.' }, c, pr.cors ? 'cors' : 'nocors');
+    if (res.ok && !res.opaque) say(m3, 'ok', 'Сообщение отправлено. Проверь Telegram!');
+    else if (res.ok) say(m3, 'ok', 'Запрос ушёл. Проверь Telegram: если сообщение пришло, всё работает.');
+    else if (res.net) say(m3, 'err', 'Нет связи с Telegram. Проверь интернет и попробуй ещё раз.');
+    else say(m3, 'err', 'Telegram ответил ошибкой: ' + (res.description || 'неизвестно') + '. Проверь номер чата и напиши боту ещё раз.');
+  });
+
+  $('#tg-dl').addEventListener('click', () => {
+    const c = cur();
+    if (!c.token || !c.chat) { say(m3, 'err', 'Нужны токен (шаг 1) и номер чата (шаг 2).'); return; }
+    const json = JSON.stringify({ token: c.token, chat: c.chat }).replace(/</g, '\\u003c');
+    const html = PAGE_SRC.replace(/(<script id="tg-config" type="application\/json">)[\s\S]*?(<\/script>)/, (all, a, b) => a + json + b);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = HW.fileName + '-dlya-uchenikov.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    say(m3, 'ok', 'Файл скачан: ' + a.download + '. Его и отправляй ученикам.');
+  });
+
+  $('#coach-back').addEventListener('click', () => setScreen('intro'));
+}
+
+/* ===================== Запуск ===================== */
+$('#eyebrow').textContent = HW.eyebrow;
+$('#hw-title').textContent = HW.title;
+$('#hw-sub').textContent = HW.subtitle;
+const coachLink = $('#coach-link');
+coachLink.hidden = TG.on();
+coachLink.addEventListener('click', () => { leaveTask(); setScreen('coach'); });
+if (/^#trener$/.test(location.hash)) setScreen('coach'); else setScreen('intro');
+if (TG.on()) setTimeout(() => REP.flush(), 1500);
+
+</script></body></html>
